@@ -43,6 +43,10 @@ const routeList: RouteProps[] = [
     label: "Team",
   },
   {
+    href: "#how-it-works",
+    label: "How It Works",
+  },
+  {
     href: "#contact",
     label: "Contact",
   },
@@ -54,20 +58,19 @@ const routeList: RouteProps[] = [
 
 const featureList: FeatureProps[] = [
   {
-    title: "Showcase Your Value ",
-    description: "Highlight how your product solves user problems.",
+    title: "Secure URL Shortening",
+    description: "Shorten links with confidence. Our AI ensures every link is safe.",
   },
   {
-    title: "Build Trust",
-    description:
-      "Leverages social proof elements to establish trust and credibility.",
+    title: "Advanced Analytics",
+    description: "Track clicks, locations, devices, and more with detailed reports.",
   },
   {
-    title: "Capture Leads",
-    description:
-      "Make your lead capture form visually appealing and strategically.",
+    title: "Custom URL Options",
+    description: "Create branded short links that match your style and domain.",
   },
 ];
+
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -75,7 +78,7 @@ export const Navbar = () => {
     <header className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
       <Link href="/" className="font-bold text-lg flex items-center">
         <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
-        Shadcn
+        Securly
       </Link>
       {/* <!-- Mobile --> */}
       <div className="flex items-center lg:hidden">
@@ -96,7 +99,7 @@ export const Navbar = () => {
                 <SheetTitle className="flex items-center">
                   <Link href="/" className="flex items-center">
                     <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
-                    Shadcn
+                    Securly
                   </Link>
                 </SheetTitle>
               </SheetHeader>
@@ -135,8 +138,8 @@ export const Navbar = () => {
             <NavigationMenuContent>
               <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
                 <Image
-                  src="https://avatars.githubusercontent.com/u/75042455?v=4"
-                  alt="RadixLogo"
+                  src="/images/securly-demo.png"
+                  alt="Securly Features"
                   className="h-full w-full rounded-md object-cover"
                   width={600}
                   height={600}
@@ -163,7 +166,7 @@ export const Navbar = () => {
           <NavigationMenuItem>
             {routeList.map(({ href, label }) => (
               <NavigationMenuLink key={href} asChild>
-                <Link href={href} className="text-base px-2">
+                <Link href={href} className="text-base px-3">
                   {label}
                 </Link>
               </NavigationMenuLink>
@@ -172,19 +175,14 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <div className="hidden lg:flex">
+      <div className="hidden lg:flex gap-3">
         <ToggleTheme />
 
-        <Button asChild size="sm" variant="ghost" aria-label="View on GitHub">
-          <Link
-            aria-label="View on GitHub"
-            href="https://github.com/nobruf/shadcn-landing-page.git"
-            target="_blank"
-          >
-            <Github className="size-5" />
-          </Link>
+        <Button asChild variant={"secondary"}>
+          <Link href="/login">Try Securly</Link>
         </Button>
       </div>
     </header>
   );
 };
+
