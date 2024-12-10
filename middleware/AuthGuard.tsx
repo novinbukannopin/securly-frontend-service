@@ -10,7 +10,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log(token);
 
     if (!token) {
       router.push("/login");

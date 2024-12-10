@@ -6,17 +6,19 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import {usePathname} from "next/navigation";
+import {Toaster} from "@/components/ui/toaster";
+import ReactQueryProvider from "@/providers/react-query-providers.";
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
+export default function Main({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
 
   const pathname = usePathname();
-  const noNavbarPages = ["/login", "/register", "/dashboard"];
-  const showNavbar = !noNavbarPages.includes(pathname);
+  const noNavbarPages = ["/"];
+  const showNavbar = noNavbarPages.includes(pathname);
 
   return (
     <html lang="pt-br" suppressHydrationWarning>
@@ -28,8 +30,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {showNavbar && <Navbar />}
-          {children}
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
         </ThemeProvider>
+        <Toaster/>
       </body>
     </html>
   );

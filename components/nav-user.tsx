@@ -64,7 +64,7 @@ export function NavUser({
   const fetchUserData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SECURLY_BACKEND_BASE_URL}/v1/users/me`,
+        `${process.env.NEXT_PUBLIC_SECURLY_BACKEND_BASE_URL}/users/me`,
         {
           method: 'GET',
           headers: {
@@ -81,6 +81,9 @@ export function NavUser({
         isEmailVerified: user.isEmailVerified,
         name: user.name,
         count: user.linkCount,
+        dob: user.dob,
+        language: user.language,
+        username: user.username,
       })
     } catch (error) {
       console.error('Error fetching user data:', error)

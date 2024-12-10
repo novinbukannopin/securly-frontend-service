@@ -24,7 +24,7 @@ export const usageData: UsageData = {
     max: 1000,
   },
   links: {
-    current: 0,
+    current: 10,
     max: 25,
   },
 }
@@ -38,7 +38,7 @@ export function AnalyticsSidebar() {
               Usage
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
+              <SidebarMenu className={"gap-4"}>
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full">
                       <BarChart3 className="mr-2 h-4 w-4" />
@@ -66,8 +66,6 @@ export function AnalyticsSidebar() {
             <Button className="w-full bg-black text-white hover:bg-black/90" size="lg">Get Securly Pro</Button>
           </div>
       </>
-
-
   )
 }
 
