@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserUpdatePayload } from '@/types/user';
 import { client } from '@/lib/axios';
-import { toast } from '@/hooks/use-toast';
 import { AxiosError } from 'axios';
+import { toast } from 'sonner';
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
@@ -13,16 +13,12 @@ export function useUpdateProfile() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['user'] });
-      toast({
-        title: 'Profile updated successfully',
-      });
+      toast.success('Profile updated', data);
+      // mungkin get user dari queryClient [user] dan update datanya
     },
     onError: async (error) => {
       if (error instanceof AxiosError) {
-        toast({
-          variant: 'destructive',
-          title: error.response?.data.message,
-        });
+        toast.error(error.response?.data.message);
       }
     },
   });
