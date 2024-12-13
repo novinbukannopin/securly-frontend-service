@@ -22,3 +22,7 @@ export function isTokenInvalidOrExpired(token: string | undefined): boolean {
     return true;
   }
 }
+
+export function generateShortLink(): string {
+  return Math.random().toString(36).substring(2, 7);
+}

@@ -14,7 +14,6 @@ export function useUpdateProfile() {
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['user'] });
       toast.success('Profile updated', data);
-      // mungkin get user dari queryClient [user] dan update datanya
     },
     onError: async (error) => {
       if (error instanceof AxiosError) {
