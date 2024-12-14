@@ -1,71 +1,85 @@
-"use client";
+'use client';
 
-import { Icon } from "@/components/ui/icon";
-import { Marquee } from "@devnomic/marquee";
-import "@devnomic/marquee/dist/index.css";
-import { icons } from "lucide-react";
-interface sponsorsProps {
-  icon: string;
+import { Marquee } from '@devnomic/marquee';
+import '@devnomic/marquee/dist/index.css';
+
+interface SponsorProps {
+  image: string;
   name: string;
 }
 
-const sponsors: sponsorsProps[] = [
+const sponsors: SponsorProps[] = [
   {
-    icon: "Crown",
-    name: "Acmebrand",
+    image: 'adobe.svg',
+    name: 'Adobe',
   },
   {
-    icon: "Vegan",
-    name: "Acmelogo",
+    image: 'airbnb.svg',
+    name: 'Airbnb',
   },
   {
-    icon: "Ghost",
-    name: "Acmesponsor",
+    image: 'amazon.svg',
+    name: 'amazon',
   },
   {
-    icon: "Puzzle",
-    name: "Acmeipsum",
+    image: 'atlasian.svg',
+    name: 'attlasian',
   },
   {
-    icon: "Squirrel",
-    name: "Acme",
+    image: 'docker.svg',
+    name: 'docker',
   },
   {
-    icon: "Cookie",
-    name: "Accmee",
+    image: 'framer.svg',
+    name: 'framer',
   },
   {
-    icon: "Drama",
-    name: "Acmetech",
+    image: 'google.svg',
+    name: 'google',
+  },
+  {
+    image: 'microsoft.svg',
+    name: 'microsoft',
+  },
+  {
+    image: 'netflix.svg',
+    name: 'netflix',
+  },
+  {
+    image: 'paypal.svg',
+    name: 'paypal',
+  },
+  {
+    image: 'spacex.svg',
+    name: 'spacex',
+  },
+  {
+    image: 'tesla.svg',
+    name: 'tesla',
   },
 ];
 
 export const SponsorsSection = () => {
   return (
-    <section id="sponsors" className="max-w-[75%] mx-auto pb-24 sm:pb-32">
-      <h2 className="text-lg md:text-xl text-center mb-6">
+    <section id='sponsors' className='mx-auto max-w-[75%] pb-24 sm:pb-32'>
+      <h2 className='mb-6 text-center text-lg md:text-xl'>
         Our Platinum Sponsors
       </h2>
 
-      <div className="mx-auto">
+      <div className='mx-auto'>
         <Marquee
-          className="gap-[3rem]"
+          className='gap-[3rem]'
           fade
-          innerClassName="gap-[3rem]"
+          innerClassName='gap-[3rem]'
           pauseOnHover
         >
-          {sponsors.map(({ icon, name }) => (
-            <div
-              key={name}
-              className="flex items-center text-xl md:text-2xl font-medium"
-            >
-              <Icon
-                name={icon as keyof typeof icons}
-                size={32}
-                color="white"
-                className="mr-2"
+          {sponsors.map(({ image, name }) => (
+            <div key={name} className='flex items-center justify-center'>
+              <img
+                src={'/sponsors/' + image}
+                alt={name}
+                className='h-12 w-auto object-contain'
               />
-              {name}
             </div>
           ))}
         </Marquee>

@@ -43,10 +43,6 @@ const routeList: RouteProps[] = [
     label: 'Team',
   },
   {
-    href: '#how-it-works',
-    label: 'How It Works',
-  },
-  {
     href: '#contact',
     label: 'Contact',
   },
@@ -78,7 +74,14 @@ export const Navbar = () => {
   return (
     <header className='sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border border-secondary bg-card bg-opacity-15 p-2 shadow-inner md:w-[70%] lg:w-[75%] lg:max-w-screen-xl'>
       <Link href='/' className='flex items-center text-lg font-bold'>
-        <ChevronsDown className='mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/70 to-primary text-white' />
+        <Image
+          src={'/securly.svg'}
+          alt={'logo'}
+          width={24}
+          height={24}
+          className={'mr-2'}
+        />
+        {/*<ChevronsDown className='mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/70 to-primary text-white' />*/}
         Securly
       </Link>
       {/* <!-- Mobile --> */}
@@ -179,8 +182,12 @@ export const Navbar = () => {
       <div className='hidden gap-3 lg:flex'>
         <ToggleTheme />
 
-        <Button asChild variant={'secondary'}>
-          <Link href='/login'>Try Securly</Link>
+        <Button asChild>
+          <Link href='/login'>Login</Link>
+        </Button>
+
+        <Button asChild variant={'link'}>
+          <Link href='/register'>Register</Link>
         </Button>
       </div>
     </header>

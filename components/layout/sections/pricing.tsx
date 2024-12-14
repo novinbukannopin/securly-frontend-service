@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Check } from "lucide-react";
+} from '@/components/ui/card';
+import { Check } from 'lucide-react';
 
 enum PopularPlan {
   NO = 0,
@@ -25,96 +25,95 @@ interface PlanProps {
 
 const plans: PlanProps[] = [
   {
-    title: "Free",
+    title: 'Free',
     popular: 0,
     price: 0,
-    description:
-      "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
-    buttonText: "Start Free Trial",
+    description: 'Ideal for personal use and small projects.',
+    buttonText: 'Start Free',
     benefitList: [
-      "1 team member",
-      "1 GB storage",
-      "Upto 2 pages",
-      "Community support",
-      "AI assistance",
+      'Unlimited short links',
+      'Basic URL safety checks',
+      'Basic analytics (click count)',
+      'Community support',
     ],
   },
   {
-    title: "Premium",
+    title: 'Pro',
     popular: 1,
-    price: 45,
-    description:
-      "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
-    buttonText: "Get starterd",
+    price: 20,
+    description: 'Perfect for freelancers and growing businesses.',
+    buttonText: 'Get Started',
     benefitList: [
-      "4 team member",
-      "8 GB storage",
-      "Upto 6 pages",
-      "Priority support",
-      "AI assistance",
+      'Custom branded short links',
+      'Advanced URL safety checks (AI-based)',
+      'Detailed analytics (geolocation, device)',
+      'Custom QR codes',
+      'Priority email support',
     ],
   },
   {
-    title: "Enterprise",
+    title: 'Enterprise',
     popular: 0,
-    price: 120,
-    description:
-      "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
-    buttonText: "Contact US",
+    price: 99,
+    description: 'Tailored for large teams and organizations.',
+    buttonText: 'Contact Us',
     benefitList: [
-      "10 team member",
-      "20 GB storage",
-      "Upto 10 pages",
-      "Phone & email support",
-      "AI assistance",
+      'Unlimited branded short links',
+      'AI-driven malicious URL detection',
+      'Team collaboration (10 members included)',
+      'Advanced analytics dashboard',
+      'Custom integrations (API access)',
+      'Dedicated account manager',
+      'Phone & email support',
     ],
   },
 ];
 
 export const PricingSection = () => {
   return (
-    <section className="container py-24 sm:py-32">
-      <h2 className="text-lg text-primary text-center mb-2 tracking-wider">
+    <section className='container py-24 sm:py-32'>
+      <h2 className='mb-2 text-center text-lg tracking-wider text-primary'>
         Pricing
       </h2>
 
-      <h2 className="text-3xl md:text-4xl text-center font-bold mb-4">
-        Get unlimitted access
+      <h2 className='mb-4 text-center text-3xl font-bold md:text-4xl'>
+        Choose the Perfect Plan
       </h2>
 
-      <h3 className="md:w-1/2 mx-auto text-xl text-center text-muted-foreground pb-14">
-        Lorem ipsum dolor sit amet consectetur adipisicing reiciendis.
+      <h3 className='mx-auto pb-14 text-center text-xl text-muted-foreground md:w-1/2'>
+        Access powerful tools for secure URL shortening, analytics, and more.
+        Pick the plan that suits your needs.
       </h3>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-4">
+      <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-4'>
         {plans.map(
           ({ title, popular, price, description, buttonText, benefitList }) => (
             <Card
               key={title}
               className={
                 popular === PopularPlan?.YES
-                  ? "drop-shadow-xl shadow-black/10 dark:shadow-white/10 border-[1.5px] border-primary lg:scale-[1.1]"
-                  : ""
+                  ? 'border-[1.5px] border-primary shadow-black/10 drop-shadow-xl dark:shadow-white/10 lg:scale-[1.1]'
+                  : ''
               }
             >
               <CardHeader>
-                <CardTitle className="pb-2">{title}</CardTitle>
+                <CardTitle className='pb-2'>{title}</CardTitle>
 
-                <CardDescription className="pb-4">
+                <CardDescription className='pb-4'>
                   {description}
                 </CardDescription>
 
                 <div>
-                  <span className="text-3xl font-bold">${price}</span>
-                  <span className="text-muted-foreground"> /month</span>
+                  <span className='text-3xl font-bold'>${price}</span>
+                  <span className='text-muted-foreground'> /month</span>
                 </div>
               </CardHeader>
 
-              <CardContent className="flex">
-                <div className="space-y-4">
+              <CardContent className='flex'>
+                <div className='space-y-4'>
                   {benefitList.map((benefit) => (
-                    <span key={benefit} className="flex">
-                      <Check className="text-primary mr-2" />
+                    <span key={benefit} className='flex'>
+                      <Check className='mr-2 text-primary' />
                       <h3>{benefit}</h3>
                     </span>
                   ))}
@@ -124,15 +123,15 @@ export const PricingSection = () => {
               <CardFooter>
                 <Button
                   variant={
-                    popular === PopularPlan?.YES ? "default" : "secondary"
+                    popular === PopularPlan?.YES ? 'default' : 'secondary'
                   }
-                  className="w-full"
+                  className='w-full'
                 >
                   {buttonText}
                 </Button>
               </CardFooter>
             </Card>
-          )
+          ),
         )}
       </div>
     </section>
