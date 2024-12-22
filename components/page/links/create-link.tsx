@@ -31,7 +31,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -46,6 +45,13 @@ import { ExpirationModal } from '@/components/page/links/expiration-modal';
 import QRCode from 'qrcode';
 import { DOMAIN } from '@/lib/env';
 import ColorPicker from '@/components/custom/color-picker';
+import { useCheckLink } from '@/service/mutations/check';
+import { Skeleton } from '@/components/ui/skeleton';
+import PredictionResult from '@/components/custom/prediction-card';
+import { toast } from 'sonner';
+import { useCreateLink } from '@/service/mutations/link';
+import { CreateLinkInput, Link } from '@/types/link';
+import { Badge } from '@/components/ui/badge';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -72,9 +78,31 @@ const linkSchema = z.object({
 
 export type CreateLinkFormValue = z.infer<typeof linkSchema>;
 
-export default function LinkCreatorWithModal() {
+export default function LinkCreatorWithModal({
+  dialogOpen,
+  setDialogOpen,
+  children,
+  existingData,
+}: {
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
+  children: React.ReactNode;
+  existingData?: Link;
+}) {
+  let {
+    mutate,
+    disableSubmit,
+    setDisableSubmit,
+    apiResponse,
+    setApiResponse,
+    status,
+  } = useCheckLink();
+  const createLink = useCreateLink();
+
+  const isLoading = status === 'pending';
+
   const [open, setOpen] = React.useState(false);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  // const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tags, setTags] = React.useState<string[]>([
     'marketing',
     'social',
@@ -90,7 +118,7 @@ export default function LinkCreatorWithModal() {
   const methods = useForm<CreateLinkFormValue>({
     resolver: zodResolver(linkSchema),
     defaultValues: {
-      tags: ['marketing'],
+      tags: [],
     },
   });
 
@@ -105,6 +133,36 @@ export default function LinkCreatorWithModal() {
   const selectedTags = watch('tags') || [];
   const [qrCodeData, setQRCodeData] = React.useState<string>('');
 
+  const handleUrlChange = (() => {
+    let timeoutRef: NodeJS.Timeout | null = null;
+
+    if (existingData) {
+      return;
+    }
+
+    return (fieldOnChange: (value: string) => void) =>
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const url = e.target.value.trim();
+
+        fieldOnChange(url);
+
+        if (timeoutRef) {
+          clearTimeout(timeoutRef);
+        }
+
+        if (!url) {
+          setApiResponse(null);
+          return;
+        }
+
+        timeoutRef = setTimeout(() => {
+          if (/^(https?:\/\/)/.test(url)) {
+            mutate(url);
+          }
+        }, 1500);
+      };
+  })();
+
   const handleSelectTag = (tag: string) => {
     const currentTags = watch('tags') || [];
     const updatedTags = Array.isArray(currentTags)
@@ -115,8 +173,35 @@ export default function LinkCreatorWithModal() {
     setValue('tags', updatedTags);
   };
 
-  const onSubmit = (data: CreateLinkFormValue) => {
-    console.log(data, (data.qrcode = qrCodeData));
+  const onSubmit = async (data: CreateLinkFormValue) => {
+    if (apiResponse?.data.prediction === 'blocked') {
+      toast.error('This URL is blocked by our system. Please try another URL.');
+    }
+
+    const values: CreateLinkInput = {
+      originalUrl: data.url,
+      shortCode: data.shortlink,
+      type: apiResponse?.data.prediction.toUpperCase() || 'BENIGN',
+      comments: data.comments,
+      expiration: {
+        datetime: data.expiration?.datetime,
+        url: data.expiration?.url,
+      },
+      qrcode: qrCodeData,
+      tags: data.tags,
+      utm: data.utm,
+    };
+
+    try {
+      await createLink.mutateAsync(values);
+    } catch (error) {
+      toast.error('Failed to create link.');
+    } finally {
+      setDialogOpen(false);
+      setDisableSubmit(true);
+      setApiResponse(null);
+      reset();
+    }
   };
 
   const handleGenerateShortLink = async () => {
@@ -195,14 +280,16 @@ export default function LinkCreatorWithModal() {
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogTrigger asChild>
-        <Button>Create Link</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='sm:max-w-[500px] md:max-w-4xl'>
         <DialogHeader>
-          <DialogTitle>Create New Link</DialogTitle>
+          <DialogTitle>
+            {existingData ? 'Edit Link' : 'Create new Link'}
+          </DialogTitle>
           <DialogDescription>
-            Create a new short link for your campaign or project.
+            {existingData
+              ? 'Update the details of the link.'
+              : 'Create a new link to share.'}
           </DialogDescription>
         </DialogHeader>
         <Card className='w-full'>
@@ -217,8 +304,37 @@ export default function LinkCreatorWithModal() {
                       <FormItem>
                         <FormLabel>Destination URL</FormLabel>
                         <FormControl>
-                          <Input placeholder='https://example.com' {...field} />
+                          <Input
+                            placeholder='https://example.com'
+                            {...field}
+                            onChange={
+                              existingData
+                                ? undefined
+                                : handleUrlChange
+                                  ? handleUrlChange(field.onChange)
+                                  : undefined
+                            }
+                            value={existingData?.originalUrl}
+                          />
                         </FormControl>
+                        <div>
+                          {isLoading ? (
+                            <div className='space-y-2 pt-2'>
+                              <Skeleton className='h-4 w-1/2' />
+                              <Skeleton className='h-4 w-3/4' />
+                              <Skeleton className='h-4 w-1/4' />
+                            </div>
+                          ) : apiResponse ? (
+                            <PredictionResult
+                              prediction={apiResponse.data.prediction}
+                              originalUrl={apiResponse.data.url}
+                            />
+                          ) : (
+                            <p className='text-sm text-gray-500'>
+                              Enter a URL to check.
+                            </p>
+                          )}
+                        </div>
                         {errors.url && (
                           <FormMessage>{errors.url.message}</FormMessage>
                         )}
@@ -241,6 +357,7 @@ export default function LinkCreatorWithModal() {
                               onChange={(e) =>
                                 handleShortlinkChange(e.target.value)
                               }
+                              defaultValue={existingData?.shortCode}
                             />
                             <Button
                               className='rounded-l-none'
@@ -306,6 +423,17 @@ export default function LinkCreatorWithModal() {
                           </PopoverContent>
                         </Popover>
                         <div className='flex flex-wrap gap-2'>
+                          {existingData?.TagLink.map((tag, idx: number) => (
+                            <Badge
+                              key={idx}
+                              variant='secondary'
+                              className='cursor-pointer'
+                              onClick={() => handleSelectTag(tag.tag.name)}
+                            >
+                              {tag.tag.name}
+                              <X className='ml-1 h-3 w-3' />
+                            </Badge>
+                          ))}
                           {selectedTags.map((tag) => (
                             <Badge
                               key={tag}
@@ -332,6 +460,7 @@ export default function LinkCreatorWithModal() {
                           <Textarea
                             placeholder='Add any notes or comments...'
                             {...field}
+                            defaultValue={existingData?.comments || ''}
                           />
                         </FormControl>
                       </FormItem>
@@ -353,9 +482,9 @@ export default function LinkCreatorWithModal() {
                       </Button>
                     </div>
                     <div className='mt-4 flex aspect-square items-center justify-center rounded-lg border bg-background'>
-                      {qrCodeData ? (
+                      {qrCodeData || existingData ? (
                         <img
-                          src={qrCodeData}
+                          src={qrCodeData || existingData?.qrcode}
                           alt='QR Code'
                           className='h-full w-full'
                         />
@@ -375,7 +504,7 @@ export default function LinkCreatorWithModal() {
                       <div className='h-4 w-3/4 rounded bg-muted'>
                         <h5 className={'truncate text-sm'}>
                           {DOMAIN}
-                          {watch('shortlink')}
+                          {watch('shortlink') || existingData?.shortCode}
                         </h5>
                       </div>
                     </div>
@@ -398,7 +527,9 @@ export default function LinkCreatorWithModal() {
                   >
                     Reset / Close
                   </Button>
-                  <Button type='submit'>Create Link</Button>
+                  <Button type='submit' disabled={disableSubmit}>
+                    Create Link
+                  </Button>
                 </div>
               </CardFooter>
             </form>
