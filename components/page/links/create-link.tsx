@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,9 +50,10 @@ import { useCheckLink } from '@/service/mutations/check';
 import { Skeleton } from '@/components/ui/skeleton';
 import PredictionResult from '@/components/custom/prediction-card';
 import { toast } from 'sonner';
-import { useCreateLink } from '@/service/mutations/link';
+
 import { CreateLinkInput, Link } from '@/types/link';
 import { Badge } from '@/components/ui/badge';
+import { useLinkMutation } from '@/service/mutations/link';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -97,12 +99,21 @@ export default function LinkCreatorWithModal({
     setApiResponse,
     status,
   } = useCheckLink();
-  const createLink = useCreateLink();
+
+  const [isEditMode, setIsEditMode] = useState(!!existingData); //
+  const createLink = useLinkMutation({
+    method: 'POST',
+    endpoint: '/links/shorten',
+  });
+
+  const updateLink = useLinkMutation({
+    method: 'PATCH',
+    endpoint: `/links/${existingData?.id}`,
+  });
 
   const isLoading = status === 'pending';
 
   const [open, setOpen] = React.useState(false);
-  // const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tags, setTags] = React.useState<string[]>([
     'marketing',
     'social',
@@ -114,6 +125,11 @@ export default function LinkCreatorWithModal({
     'webinar',
     'branding',
   ]);
+
+  useEffect(() => {
+    setValue('url', existingData?.originalUrl || '');
+    setValue('shortlink', existingData?.shortCode || '');
+  }, []);
 
   const methods = useForm<CreateLinkFormValue>({
     resolver: zodResolver(linkSchema),
@@ -193,7 +209,23 @@ export default function LinkCreatorWithModal({
     };
 
     try {
-      await createLink.mutateAsync(values);
+      if (isEditMode) {
+        console.log('update', values);
+        await updateLink.mutateAsync({
+          // jika shortCode tidak diubah, maka qrcode tidak diupdate,
+          comments: values.comments,
+          qrcode:
+            values.shortCode !== existingData?.shortCode
+              ? qrCodeData
+              : undefined,
+          tags: values.tags,
+          utm: values.utm,
+          expiresAt: values.expiration?.datetime,
+          expiredRedirectUrl: values.expiration?.url,
+        });
+      } else {
+        await createLink.mutateAsync(values);
+      }
     } catch (error) {
       toast.error('Failed to create link.');
     } finally {
@@ -314,7 +346,7 @@ export default function LinkCreatorWithModal({
                                   ? handleUrlChange(field.onChange)
                                   : undefined
                             }
-                            value={existingData?.originalUrl}
+                            defaultValue={existingData?.originalUrl}
                           />
                         </FormControl>
                         <div>
@@ -537,7 +569,7 @@ export default function LinkCreatorWithModal({
                       Create Link
                     </Button>
                   ) : (
-                    <Button type={'button'}>Update Link</Button>
+                    <Button type={'submit'}>Update Link</Button>
                   )}
                 </div>
               </CardFooter>
