@@ -1,3 +1,3 @@
-import LinkCreator from '@/components/page/links/create-link';
+import Page from '@/components/page/links/page';
 
-export default LinkCreator;
+export default Page;

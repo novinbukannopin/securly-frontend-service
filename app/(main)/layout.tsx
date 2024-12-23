@@ -49,7 +49,7 @@ export default function RootLayout({
             </div>
           </header>
           <div className='flex flex-1 flex-col gap-4 p-4 pt-4'>
-            <div className='min-h-[100vh] max-w-[50vw] flex-1 rounded-xl md:min-h-min'>
+            <div className='min-h-[100vh] flex-1 rounded-xl md:min-h-min md:max-w-[70vw]'>
               {children}
             </div>
           </div>

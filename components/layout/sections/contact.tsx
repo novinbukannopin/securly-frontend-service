@@ -69,9 +69,9 @@ export const ContactSection = () => {
             <h2 className='text-3xl font-bold md:text-4xl'>Get in Touch</h2>
           </div>
           <p className='mb-8 text-muted-foreground lg:w-5/6'>
-            We’re here to help and answer any questions you might have. Reach
-            out to us and let's make something great together. Your feedback and
-            ideas are valuable to us!
+            We&apos;re here to help and answer any questions you might have.
+            Reach out to us and let&apos;s make something great together. Your
+            feedback and ideas are valuable to us!
           </p>
 
           <div className='flex flex-col gap-4'>

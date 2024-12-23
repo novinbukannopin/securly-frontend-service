@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import {BACKEND_URL} from "@/lib/env";
-import Cookies from "js-cookie";
+import { API_DL, BACKEND_URL } from '@/lib/env';
+import Cookies from 'js-cookie';
 
-export const token = Cookies.get("token")
+export const token = Cookies.get('token');
 
 const createAxiosInstance = (config: AxiosRequestConfig): AxiosInstance => {
   return axios.create(config);
@@ -15,3 +15,6 @@ export const client = createAxiosInstance({
   },
 });
 
+export const clientDL = createAxiosInstance({
+  baseURL: API_DL,
+});

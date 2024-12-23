@@ -1,15 +1,19 @@
 'use client';
 
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import Icons from '../icons/icons';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Cookies from 'js-cookie';
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
+import { BarChart, Globe, Laptop, LinkIcon, Settings } from 'lucide-react';
+
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Form,
   FormControl,
@@ -19,12 +23,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { PasswordInput } from '@/components/custom/password-input';
 import { client } from '@/lib/axios';
-import { toast } from 'sonner';
-import { AxiosError } from 'axios';
+import { PasswordInput } from '@/components/custom/password-input';
+import Icons from '../icons/icons';
 
-export const loginAccountSchema = z.object({
+const loginAccountSchema = z.object({
   email: z
     .string()
     .min(4, 'Email must be at least 4 characters.')
@@ -40,7 +43,7 @@ export const loginAccountSchema = z.object({
 
 type LoginAccountSchemaValues = z.infer<typeof loginAccountSchema>;
 
-export default function SignInCard() {
+export default function SignInPage() {
   const router = useRouter();
 
   const form = useForm<LoginAccountSchemaValues>({
@@ -71,8 +74,51 @@ export default function SignInCard() {
   }, [router]);
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gradient-to-r from-rose-50 to-pink-50'>
-      <Card className='w-full max-w-md p-6'>
+    <div className='relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50'>
+      {/* Decorative Elements - Left Side */}
+      <div className='absolute left-10 top-10 md:left-20 md:top-20'>
+        <div className='rounded-lg bg-card p-6 shadow-lg backdrop-blur-sm'>
+          <div className='flex items-center space-x-3'>
+            <Globe className='h-6 w-6 text-gray-500 dark:text-white' />
+            <div className='text-sm text-gray-500 dark:text-white'>
+              securly.com/dashboard
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className='absolute bottom-20 left-16 hidden md:block'>
+        <div className='rounded-lg bg-card p-6 shadow-lg backdrop-blur-sm'>
+          <div className='flex flex-col space-y-4'>
+            <LinkIcon className='h-6 w-6 text-gray-500 dark:text-white' />
+            <BarChart className='h-6 w-6 text-gray-500 dark:text-white' />
+            <Settings className='h-6 w-6 text-gray-500 dark:text-white' />
+          </div>
+        </div>
+      </div>
+
+      {/* Decorative Elements - Right Side */}
+      <div className='absolute right-10 top-1/4 hidden md:block'>
+        <div className='rounded-lg bg-card p-6 shadow-lg backdrop-blur-sm'>
+          <div className='flex items-center space-x-3'>
+            <Laptop className='h-6 w-6 text-gray-500 dark:text-white' />
+            <div className='text-sm text-gray-500 dark:text-white'>
+              Analytics Dashboard
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Dots */}
+      <div className='pointer-events-none absolute inset-0'>
+        <div className='absolute left-1/4 top-1/3 h-2 w-2 rounded-full bg-pink-400' />
+        <div className='absolute right-1/3 top-1/4 h-2 w-2 rounded-full bg-blue-400' />
+        <div className='absolute bottom-1/4 left-1/3 h-2 w-2 rounded-full bg-purple-400' />
+        <div className='absolute bottom-1/3 right-1/4 h-2 w-2 rounded-full bg-indigo-400' />
+      </div>
+
+      {/* Sign In Card */}
+      <Card className='relative z-10 mx-4 w-full max-w-md p-6'>
         <CardContent className='space-y-4'>
           <h1 className='mb-6 text-center text-xl font-semibold'>
             Sign in to your Securly account
@@ -101,14 +147,14 @@ export default function SignInCard() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <PasswordInput placeholder={'......'} {...field} />
+                      <PasswordInput placeholder='......' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button type='submit' className={'w-full'}>
+              <Button type='submit' className='w-full'>
                 Login
               </Button>
             </form>
@@ -132,7 +178,7 @@ export default function SignInCard() {
               window.location.href = 'http://localhost:3001/v1/auth/google';
             }}
           >
-            <Icons.google className='mr-2 h-4 w-4' />
+            <Icons.google className='mr-2 h-5 w-5' />
             Continue with Google
           </Button>
 
@@ -144,23 +190,32 @@ export default function SignInCard() {
             <div className='absolute inset-0 flex items-center'>
               <Separator className='w-full' />
             </div>
-            <div className='relative flex justify-center text-xs uppercase'>
-              <span className='bg-background px-2 text-muted-foreground'>
-                OR
-              </span>
-            </div>
           </div>
         </CardContent>
 
         <CardFooter className='justify-center'>
           <p className='text-sm text-muted-foreground'>
-            Don&#39;t have an account?{' '}
-            <a href='/register' className='text-primary hover:underline'>
+            Don&apos;t have an account?{' '}
+            <Link href='/register' className='text-primary hover:underline'>
               Sign up
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>
+
+      {/* Footer */}
+      <footer className='relative z-10 mt-8 text-center'>
+        <div className='text-sm text-gray-500'>
+          © 2024 Securly, Inc.{' '}
+          <Link href='/privacy' className='text-gray-600 hover:underline'>
+            Privacy Policy
+          </Link>
+          {' · '}
+          <Link href='/terms' className='text-gray-600 hover:underline'>
+            Terms of Service
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

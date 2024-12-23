@@ -13,8 +13,8 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { useUserStore } from '@/stores/user';
 import { UsageData } from '@/types/limit';
+import { useGetProfile } from '@/service/queries/profile';
 
 export const usageData: UsageData = {
   events: {
@@ -28,7 +28,9 @@ export const usageData: UsageData = {
 };
 
 export function AnalyticsSidebar() {
-  const userProfile = useUserStore((state) => state.userProfile);
+  const { data, isLoading, error } = useGetProfile();
+
+  // @ts-ignore
   return (
     <>
       <SidebarGroup className='mt-6'>
@@ -52,11 +54,11 @@ export function AnalyticsSidebar() {
                 <Link2 className='mr-2 h-4 w-4' />
                 <span>Links</span>
                 <span className='ml-auto'>
-                  {userProfile?.count} of {usageData.links.max}
+                  {data?.linkCount} of {usageData.links.max}
                 </span>
               </SidebarMenuButton>
               <Progress
-                value={(userProfile?.count || 0 / usageData.links.max) * 100}
+                value={100 * (data?.linkCount || 100 / usageData.links.max)}
               />
             </SidebarMenuItem>
           </SidebarMenu>
