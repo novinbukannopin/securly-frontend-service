@@ -28,7 +28,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-export function ExpirationModal() {
+type ExpirationModalProps = {
+  datetime?: string;
+  url?: string;
+};
+
+export function ExpirationModal({ data }: { data?: ExpirationModalProps }) {
   const {
     setValue,
     watch,
@@ -106,7 +111,7 @@ export function ExpirationModal() {
               </FormLabel>
               <FormControl>
                 <DateTimePicker
-                  value={localExpirationData.datetime}
+                  value={data?.datetime ?? undefined}
                   onChange={(value) => handleInputChange('datetime', value)}
                 />
               </FormControl>
@@ -130,7 +135,8 @@ export function ExpirationModal() {
               <FormControl>
                 <Input
                   placeholder='https://example.com'
-                  value={localExpirationData.url}
+                  // value={localExpirationData.url}
+                  defaultValue={data?.url}
                   onChange={(e) => handleInputChange('url', e.target.value)}
                 />
               </FormControl>

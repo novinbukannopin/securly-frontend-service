@@ -39,12 +39,14 @@ export default function Page() {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'c' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        if (!open) {
+          setOpen(true);
+        }
       }
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, []);
+  }, [open]);
 
   return (
     <>

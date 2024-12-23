@@ -514,8 +514,13 @@ export default function LinkCreatorWithModal({
               <Separator />
               <CardFooter className='justify-between p-6'>
                 <div className='flex gap-2'>
-                  <UTMBuilder />
-                  <ExpirationModal />
+                  <UTMBuilder data={existingData?.UTM || undefined} />
+                  <ExpirationModal
+                    data={{
+                      datetime: existingData?.expiresAt,
+                      url: existingData?.expiredRedirectUrl,
+                    }}
+                  />
                 </div>
                 <div className={'flex gap-2'}>
                   <Button
@@ -527,9 +532,13 @@ export default function LinkCreatorWithModal({
                   >
                     Reset / Close
                   </Button>
-                  <Button type='submit' disabled={disableSubmit}>
-                    Create Link
-                  </Button>
+                  {!existingData ? (
+                    <Button type='submit' disabled={disableSubmit}>
+                      Create Link
+                    </Button>
+                  ) : (
+                    <Button type={'button'}>Update Link</Button>
+                  )}
                 </div>
               </CardFooter>
             </form>

@@ -21,7 +21,15 @@ import {
 } from '@/components/ui/tooltip';
 import { useFormContext } from 'react-hook-form';
 
-export function UTMBuilder() {
+type UTM = {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+};
+
+export function UTMBuilder({ data }: { data?: UTM }) {
   const { setValue, watch } = useFormContext();
   const utmData = watch('utm') || {
     source: '',
@@ -75,7 +83,7 @@ export function UTMBuilder() {
                 id={`utm.${field}`}
                 placeholder={`Enter ${field}`}
                 onChange={(e) => setValue(`utm.${field}`, e.target.value)}
-                value={utmData[field]}
+                defaultValue={data ? data[field as keyof UTM] || '' : ''}
               />
             </div>
           ))}
