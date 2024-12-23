@@ -81,7 +81,6 @@ export function LinksList({
           dialogOpen={!!activeLink}
           setDialogOpen={handleClose}
           existingData={activeLink}
-          children={undefined}
         ></LinkCreatorWithModal>
       )}
     </>

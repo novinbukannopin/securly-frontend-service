@@ -86,7 +86,7 @@ export default function LinkCreatorWithModal({
 }: {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   existingData?: Link;
 }) {
   let {
