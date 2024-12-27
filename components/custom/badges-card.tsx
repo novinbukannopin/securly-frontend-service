@@ -25,7 +25,7 @@ export default function CategoryBadges({
       ))}
       <Badge
         variant='outline'
-        className='flex items-center gap-1.5 border-gray-200 bg-gray-50 hover:bg-gray-100'
+        className='flex items-center gap-1.5 border-gray-200 bg-gray-50 hover:bg-gray-100 dark:text-secondary'
       >
         <MouseClick className='h-3 w-3' />
         <span className='text-xs'>{clicks} click</span>

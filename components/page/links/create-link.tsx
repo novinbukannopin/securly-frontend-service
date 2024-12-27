@@ -20,19 +20,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -52,8 +39,21 @@ import PredictionResult from '@/components/custom/prediction-card';
 import { toast } from 'sonner';
 
 import { CreateLinkInput, Link } from '@/types/link';
-import { Badge } from '@/components/ui/badge';
 import { useLinkMutation } from '@/service/mutations/link';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Badge } from '@/components/ui/badge';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -134,7 +134,7 @@ export default function LinkCreatorWithModal({
   const methods = useForm<CreateLinkFormValue>({
     resolver: zodResolver(linkSchema),
     defaultValues: {
-      tags: [],
+      tags: existingData?.TagLink.map((tag) => tag.tag.name) || [],
     },
   });
 
@@ -212,13 +212,16 @@ export default function LinkCreatorWithModal({
       if (isEditMode) {
         console.log('update', values);
         await updateLink.mutateAsync({
-          // jika shortCode tidak diubah, maka qrcode tidak diupdate,
+          shortCode:
+            data.shortlink !== existingData?.shortCode
+              ? data.shortlink
+              : undefined,
           comments: values.comments,
           qrcode:
             values.shortCode !== existingData?.shortCode
               ? qrCodeData
               : undefined,
-          tags: values.tags,
+          tags: selectedTags,
           utm: values.utm,
           expiresAt: values.expiration?.datetime,
           expiredRedirectUrl: values.expiration?.url,
@@ -455,17 +458,6 @@ export default function LinkCreatorWithModal({
                           </PopoverContent>
                         </Popover>
                         <div className='flex flex-wrap gap-2'>
-                          {existingData?.TagLink.map((tag, idx: number) => (
-                            <Badge
-                              key={idx}
-                              variant='secondary'
-                              className='cursor-pointer'
-                              onClick={() => handleSelectTag(tag.tag.name)}
-                            >
-                              {tag.tag.name}
-                              <X className='ml-1 h-3 w-3' />
-                            </Badge>
-                          ))}
                           {selectedTags.map((tag) => (
                             <Badge
                               key={tag}
