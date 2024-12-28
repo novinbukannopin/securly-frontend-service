@@ -54,6 +54,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
+import { ArchiveLinkDialog } from '@/components/page/links/archieve-link';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -100,7 +101,8 @@ export default function LinkCreatorWithModal({
     status,
   } = useCheckLink();
 
-  const [isEditMode, setIsEditMode] = useState(!!existingData); //
+  const [isEditMode, setIsEditMode] = useState(!!existingData);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const createLink = useLinkMutation({
     method: 'POST',
     endpoint: '/links/shorten',
@@ -544,6 +546,10 @@ export default function LinkCreatorWithModal({
                       datetime: existingData?.expiresAt,
                       url: existingData?.expiredRedirectUrl,
                     }}
+                  />
+                  <ArchiveLinkDialog
+                    linkId={existingData?.id || 0}
+                    isArchived={existingData?.deletedAt || undefined}
                   />
                 </div>
                 <div className={'flex gap-2'}>

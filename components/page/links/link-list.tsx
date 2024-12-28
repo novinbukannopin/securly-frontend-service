@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from '@/types/link';
 import LinkCard from '@/components/page/links/link-card';
 import LinkCreatorWithModal from '@/components/page/links/create-link';
@@ -52,6 +52,7 @@ export function LinksList({
     setActiveLink(null);
   };
 
+  // @ts-ignore
   return (
     <>
       <div

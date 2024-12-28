@@ -66,7 +66,7 @@ export function AnalyticsSidebar() {
       </SidebarGroup>
       <div className='mt-6 px-2'>
         <Button
-          className='w-full bg-black text-white hover:bg-black/90'
+          className='w-full bg-black text-white hover:bg-black/90 dark:bg-secondary'
           size='lg'
         >
           Get Securly Pro
