@@ -81,3 +81,13 @@ interface LinkMetric {
     thisWeek: number;
   };
 }
+
+export interface ClickData {
+  date: string; // Format tanggal YYYY-MM-DD
+  totalClicks: number; // Total klik pada tanggal tertentu
+}
+
+export interface ClicksResponse {
+  data: ClickData[]; // Array data klik per tanggal
+  totalClick: number; // Total semua klik dalam rentang waktu yang diminta
+}

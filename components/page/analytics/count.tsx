@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';
-import { useGetAnalytics } from '@/service/queries/analytics';
 import {
   Label,
   PolarGrid,
@@ -17,7 +16,7 @@ import {
   RadialBar,
   RadialBarChart,
 } from 'recharts';
-import { LinkMetric } from '@/types/analytics';
+import { AnalyticsResponse, LinkMetric } from '@/types/analytics';
 
 const chartConfig = {
   visitors: {
@@ -29,9 +28,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CountChartAnalytics() {
-  const response = useGetAnalytics();
-  const links = response?.data?.links;
+export function CountChartAnalytics({
+  links,
+}: {
+  links?: AnalyticsResponse['links'];
+}) {
+  // const response = useGetAnalytics();
+  // const links = response?.data?.links;
 
   const generateChartData = (value: LinkMetric, total: number) => [
     {

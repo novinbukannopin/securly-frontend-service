@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/chart';
 import { useGetAnalytics } from '@/service/queries/analytics';
 import * as React from 'react';
+import { AnalyticsResponse } from '@/types/analytics';
 
 const chartData = [
   { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
@@ -68,11 +69,15 @@ const chartConfig: ChartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TagsChartAnalytics() {
+export function TagsChartAnalytics({
+  tags,
+}: {
+  tags?: AnalyticsResponse['tags'];
+}) {
   const response = useGetAnalytics();
 
   // @ts-ignore
-  const data = response?.data?.tags.usage.map((item) => ({
+  const data = tags?.usage.map((item) => ({
     type: chartConfig[item.tagName.toLowerCase()]?.label || item.tagName, // Gunakan label atau fallback ke type
     count: item.usageCount || 0, // Default ke 0 jika tidak ada nilai
     fill: chartConfig[item.tagName.toLowerCase()]?.color || '#CCCCCC', // Default warna

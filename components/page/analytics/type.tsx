@@ -17,8 +17,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { useGetAnalytics } from '@/service/queries/analytics';
 import { Label, Pie, PieChart } from 'recharts';
+import { AnalyticsResponse } from '@/types/analytics';
 
 const chartConfig: ChartConfig = {
   benign: {
@@ -47,10 +47,12 @@ const chartConfig: ChartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TypeChartAnalytics() {
-  const data = useGetAnalytics();
-  const response = data?.data?.type.list;
-  const chartData = response?.map((item) => ({
+export function TypeChartAnalytics({
+  list,
+}: {
+  list?: AnalyticsResponse['type']['list'];
+}) {
+  const chartData = list?.map((item) => ({
     type: chartConfig[item.type.toLowerCase()]?.label || item.type, // Gunakan label atau fallback ke type
     count: item._count.type || 0, // Default ke 0 jika tidak ada nilai
     fill: chartConfig[item.type.toLowerCase()]?.color || '#CCCCCC', // Default warna
