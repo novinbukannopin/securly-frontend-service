@@ -1,73 +1,83 @@
-/**
- * Request
- */
-export interface AnalyticsResponse {
-  Click: Click[];
-  createdAt: string;
-  deletedAt: null | string;
-  expiredRedirectUrl: null | string;
-  expiresAt: null | string;
-  id: number;
-  originalUrl: string;
+interface TopLink {
   shortCode: string;
-  TagLink: TagLink[];
-  updatedAt: string;
-  UTM: Utm;
-
-  [property: string]: any;
+  clicks: number;
+  originalUrl: string;
 }
 
-export interface Click {
-  country: string;
-  countryCode: string;
-  id: string;
-  ip: string;
-  loc: string;
-  org: string;
-  postal: string;
-  region: string;
-  timezone: string;
-  userAgent: UserAgent;
-
-  [property: string]: any;
+interface NeverClickedLink {
+  shortCode: string;
+  originalUrl: string;
+  createdAt: string; // ISO date string
 }
 
-export interface UserAgent {
-  browser: null | string;
-  browserVersion: null | string;
-  cpuArch: null | string;
-  deviceType: null;
-  engine: null | string;
-  os: null | string;
-  osVersion: null | string;
-  ua: string;
-
-  [property: string]: any;
+interface LinkSummary {
+  total: number;
+  active: number;
+  expired: number;
+  archived: number;
 }
 
-export interface TagLink {
-  tag: Tag;
-
-  [property: string]: any;
+interface TagSummary {
+  list: string[]; // Array of tag names
+  usage: TagUsage[];
 }
 
-export interface Tag {
-  name: string;
-
-  [property: string]: any;
+interface TagUsage {
+  tagName: string;
+  usageCount: number;
 }
 
-export interface Utm {
-  campaign: null | string;
-  content: null | string;
-  createdAt: string;
-  deletedAt: null;
-  id: number;
-  linkId: number;
-  medium: null | string;
-  source: null | string;
-  term: null | string;
-  updatedAt: string;
+interface LinkTypeInsight {
+  list: LinkTypeCount[];
+}
 
-  [property: string]: any;
+interface LinkTypeCount {
+  type: string; // Enum-like representation of LinkType
+  _count: {
+    type: number;
+  };
+}
+
+export interface AnalyticsResponse {
+  topLinks: Array<{
+    shortCode: string;
+    clicks: number;
+    originalUrl: string;
+  }>;
+  neverClickedLinks: Array<{
+    shortCode: string;
+    originalUrl: string;
+    createdAt: string;
+  }>;
+  links: {
+    total: LinkMetric;
+    active: LinkMetric;
+    expired: LinkMetric;
+    archived: LinkMetric;
+  };
+  tags: {
+    list: string[];
+    usage: Array<{
+      tagName: string;
+      usageCount: number;
+    }>;
+  };
+  type: {
+    list: Array<{
+      _count: {
+        type: number;
+      };
+      type: string;
+    }>;
+  };
+}
+
+interface LinkMetric {
+  percentageChange: any;
+  overall: number;
+  thisWeek: number;
+  lastWeek: number;
+  percentageChange: {
+    thisWeek: number;
+  };
 }

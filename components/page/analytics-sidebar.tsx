@@ -30,7 +30,6 @@ export const usageData: UsageData = {
 export function AnalyticsSidebar() {
   const { data, isLoading, error } = useGetProfile();
 
-  // @ts-ignore
   return (
     <>
       <SidebarGroup className='mt-6'>
@@ -58,7 +57,7 @@ export function AnalyticsSidebar() {
                 </span>
               </SidebarMenuButton>
               <Progress
-                value={100 * (data?.linkCount || 100 / usageData.links.max)}
+                value={data?.linkCount ?? (1 / usageData.links.max) * 100}
               />
             </SidebarMenuItem>
           </SidebarMenu>

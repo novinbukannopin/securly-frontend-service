@@ -212,7 +212,6 @@ export default function LinkCreatorWithModal({
 
     try {
       if (isEditMode) {
-        console.log('update', values);
         await updateLink.mutateAsync({
           shortCode:
             data.shortlink !== existingData?.shortCode
