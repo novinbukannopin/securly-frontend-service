@@ -24,6 +24,7 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterBy, setFilterBy] = useState('recent');
   const [displayType, setDisplayType] = useState<'grid' | 'list'>('list');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [open, setOpen] = React.useState(false);
 
@@ -56,6 +57,8 @@ export default function Page() {
           onSearchChange={setSearchQuery}
           onFilterChange={setFilterBy}
           onDisplayChange={setDisplayType}
+          availableTags={data?.tags || []}
+          onTagsChange={setSelectedTags}
         >
           <LinkCreatorWithModal dialogOpen={open} setDialogOpen={setOpen}>
             <Button className={'flex items-center'}>
@@ -73,6 +76,7 @@ export default function Page() {
           searchQuery={searchQuery}
           filterBy={filterBy}
           displayType={displayType}
+          selectedTags={selectedTags}
         />
         <div className='flex items-center'>
           <div className={'w-full text-sm'}>

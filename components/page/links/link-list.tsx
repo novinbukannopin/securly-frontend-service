@@ -10,6 +10,7 @@ interface LinksListProps {
   searchQuery: string;
   filterBy: string;
   displayType: 'grid' | 'list';
+  selectedTags: string[];
 }
 
 export function LinksList({
@@ -17,14 +18,23 @@ export function LinksList({
   searchQuery,
   filterBy,
   displayType,
+  selectedTags,
 }: LinksListProps) {
   const [activeLink, setActiveLink] = useState<Link | null>(null);
   const filteredAndSortedLinks = useMemo(() => {
-    let result = links.filter(
-      (link) =>
+    let result = links.filter((link) => {
+      const matchesSearch =
         link.originalUrl.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        link.shortCode.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+        link.shortCode.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.every((selectedTag) =>
+          link.TagLink?.some((tagLink) => tagLink.tag.name === selectedTag),
+        );
+
+      return matchesSearch && matchesTags;
+    });
 
     switch (filterBy) {
       case 'clicks':
@@ -40,9 +50,7 @@ export function LinksList({
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
     }
-  }, [links, searchQuery, filterBy]);
-
-  const [open, setOpen] = useState(false);
+  }, [links, searchQuery, filterBy, selectedTags]);
 
   const handleOpen = (link: Link) => {
     setActiveLink(link);

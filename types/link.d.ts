@@ -53,6 +53,7 @@ export interface ResponseLinks {
   page: number;
   total: number;
   totalPages: number;
+  tags: string[];
 
   [property: string]: any;
 }
