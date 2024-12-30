@@ -396,6 +396,20 @@ export default function LinkCreatorWithModal({
                               }
                               defaultValue={existingData?.shortCode}
                             />
+                            {existingData && (
+                              <Button
+                                className='rounded-r-none'
+                                type={'button'}
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    `${DOMAIN}${existingData?.shortCode}`,
+                                  );
+                                  toast.success('Copied to clipboard');
+                                }}
+                              >
+                                Copy
+                              </Button>
+                            )}
                             <Button
                               className='rounded-l-none'
                               type={'button'}
