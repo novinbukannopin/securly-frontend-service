@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, QrCode, X } from 'lucide-react';
+import { Check, ChevronsUpDown, QrCode, Terminal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { cn, generateShortLink } from '@/lib/utils';
+import { buildUTMQueryString, cn, generateShortLink } from '@/lib/utils';
 import { UTMBuilder } from '@/components/page/links/utm-builder';
 import { ExpirationModal } from '@/components/page/links/expiration-modal';
 import QRCode from 'qrcode';
@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
 import { ArchiveLinkDialog } from '@/components/page/links/archieve-link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -207,7 +208,13 @@ export default function LinkCreatorWithModal({
       },
       qrcode: qrCodeData,
       tags: data.tags,
-      utm: data.utm,
+      utm: {
+        source: data.utm?.source,
+        medium: data.utm?.medium,
+        campaign: data.utm?.campaign,
+        term: data.utm?.term,
+        content: data.utm?.content,
+      },
     };
 
     try {
@@ -223,7 +230,7 @@ export default function LinkCreatorWithModal({
               ? qrCodeData
               : undefined,
           tags: selectedTags,
-          utm: values.utm,
+          utm: data.utm,
           expiresAt: values.expiration?.datetime,
           expiredRedirectUrl: values.expiration?.url,
         });
@@ -540,10 +547,11 @@ export default function LinkCreatorWithModal({
                   <div className='rounded-lg border bg-muted/50 p-4'>
                     <h3 className='text-sm font-medium'>Link Preview</h3>
                     <div className='mt-4 space-y-2'>
-                      <div className='h-4 w-3/4 rounded bg-muted'>
-                        <h5 className={'truncate text-sm'}>
-                          {DOMAIN}
-                          {watch('shortlink') || existingData?.shortCode}
+                      <div className='h-auto w-3/4 rounded'>
+                        <h5 className={'break-words text-sm'}>
+                          {DOMAIN +
+                            (watch('shortlink') || existingData?.shortCode) +
+                            buildUTMQueryString(existingData?.UTM || {})}
                         </h5>
                       </div>
                     </div>
@@ -553,17 +561,34 @@ export default function LinkCreatorWithModal({
               <Separator />
               <CardFooter className='justify-between p-6'>
                 <div className='flex gap-2'>
-                  <UTMBuilder data={existingData?.UTM || undefined} />
-                  <ExpirationModal
-                    data={{
-                      datetime: existingData?.expiresAt,
-                      url: existingData?.expiredRedirectUrl,
-                    }}
-                  />
-                  <ArchiveLinkDialog
-                    linkId={existingData?.id || 0}
-                    isArchived={existingData?.deletedAt || undefined}
-                  />
+                  {existingData || (watch('url') && watch('shortlink')) ? (
+                    <>
+                      <UTMBuilder
+                        data={existingData?.UTM || undefined}
+                        shortCode={existingData?.shortCode || undefined}
+                      />
+                      <ExpirationModal
+                        data={{
+                          datetime: existingData?.expiresAt,
+                          url: existingData?.expiredRedirectUrl,
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Alert>
+                      <Terminal className='h-4 w-4' />
+                      <AlertTitle>Heads up!</AlertTitle>
+                      <AlertDescription>
+                        Enter a URL to enable UTM and Expiration settings.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {existingData && (
+                    <ArchiveLinkDialog
+                      linkId={existingData?.id || 0}
+                      isArchived={existingData?.deletedAt || undefined}
+                    />
+                  )}
                 </div>
                 <div className={'flex gap-2'}>
                   <Button

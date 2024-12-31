@@ -26,3 +26,26 @@ export function isTokenInvalidOrExpired(token: string | undefined): boolean {
 export function generateShortLink(): string {
   return Math.random().toString(36).substring(2, 7);
 }
+
+export function buildUTMQueryString(
+  data: Record<string, unknown>,
+  excludeKeys: string[] = ['id', 'linkId', 'createdAt', 'updatedAt'],
+): string {
+  if (!data || typeof data !== 'object') {
+    return '';
+  }
+
+  const queryString = Object.entries(data)
+    .filter(
+      ([key, value]) =>
+        !excludeKeys.includes(key) &&
+        (typeof value === 'string' ||
+          typeof value === 'number' ||
+          typeof value === 'boolean') &&
+        value !== '', // Exclude empty strings
+    )
+    .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`) // Format key=value
+    .join('&');
+
+  return queryString ? `?${queryString}` : '';
+}

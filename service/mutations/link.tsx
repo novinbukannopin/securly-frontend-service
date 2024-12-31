@@ -31,7 +31,7 @@ export function useLinkMutation({ method, endpoint }: UseLinkMutationOptions) {
           ? 'Link created successfully'
           : 'Link updated successfully',
       );
-      router.push(`/links`);
+      router.push('/links');
     },
     onError: (error: unknown) => {
       if (error instanceof AxiosError) {
