@@ -2,6 +2,7 @@
 
 import { Marquee } from '@devnomic/marquee';
 import '@devnomic/marquee/dist/index.css';
+import Image from 'next/image';
 
 interface SponsorProps {
   image: string;
@@ -75,10 +76,12 @@ export const SponsorsSection = () => {
         >
           {sponsors.map(({ image, name }) => (
             <div key={name} className='flex items-center justify-center'>
-              <img
+              <Image
                 src={'/sponsors/' + image}
                 alt={name}
                 className='h-12 w-auto object-contain'
+                width={120}
+                height={60}
               />
             </div>
           ))}

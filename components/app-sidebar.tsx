@@ -3,13 +3,13 @@
 import * as React from 'react';
 import {
   BookOpen,
-  Bot,
   Frame,
   GalleryVerticalEnd,
+  LineChart,
+  Link2,
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/sidebar';
 import { AnalyticsSidebar } from '@/components/page/analytics-sidebar';
 
-// This is sample data.
 const data = {
   user: {
     name: 'shadcn',
@@ -44,13 +43,31 @@ const data = {
     {
       title: 'Link',
       url: '/links',
-      icon: SquareTerminal,
+      icon: Link2,
       isActive: true,
     },
     {
       title: 'Analytics',
       url: '/analytics',
-      icon: Bot,
+      icon: LineChart,
+      items: [
+        {
+          title: 'Clicks',
+          url: '/analytics#click',
+        },
+        {
+          title: 'Count',
+          url: '/analytics#count',
+        },
+        {
+          title: 'Type',
+          url: '/analytics#type',
+        },
+        {
+          title: 'Tags',
+          url: '/analytics#tags',
+        },
+      ],
     },
     {
       title: 'Documentation',
@@ -87,10 +104,6 @@ const data = {
         {
           title: 'Billing',
           url: '/settings/billing',
-        },
-        {
-          title: 'Limits',
-          url: '/settings/limits',
         },
       ],
     },

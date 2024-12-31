@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, QrCode, X } from 'lucide-react';
+import { Check, ChevronsUpDown, QrCode, Terminal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,19 +20,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -39,7 +27,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { cn, generateShortLink } from '@/lib/utils';
+import { buildUTMQueryString, cn, generateShortLink } from '@/lib/utils';
 import { UTMBuilder } from '@/components/page/links/utm-builder';
 import { ExpirationModal } from '@/components/page/links/expiration-modal';
 import QRCode from 'qrcode';
@@ -49,9 +37,25 @@ import { useCheckLink } from '@/service/mutations/check';
 import { Skeleton } from '@/components/ui/skeleton';
 import PredictionResult from '@/components/custom/prediction-card';
 import { toast } from 'sonner';
-import { useCreateLink } from '@/service/mutations/link';
+
 import { CreateLinkInput, Link } from '@/types/link';
+import { useLinkMutation } from '@/service/mutations/link';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
+import { ArchiveLinkDialog } from '@/components/page/links/archieve-link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const linkSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -97,12 +101,22 @@ export default function LinkCreatorWithModal({
     setApiResponse,
     status,
   } = useCheckLink();
-  const createLink = useCreateLink();
+
+  const [isEditMode, setIsEditMode] = useState(!!existingData);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
+  const createLink = useLinkMutation({
+    method: 'POST',
+    endpoint: '/links/shorten',
+  });
+
+  const updateLink = useLinkMutation({
+    method: 'PATCH',
+    endpoint: `/links/${existingData?.id}`,
+  });
 
   const isLoading = status === 'pending';
 
   const [open, setOpen] = React.useState(false);
-  // const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tags, setTags] = React.useState<string[]>([
     'marketing',
     'social',
@@ -115,10 +129,15 @@ export default function LinkCreatorWithModal({
     'branding',
   ]);
 
+  useEffect(() => {
+    setValue('url', existingData?.originalUrl || '');
+    setValue('shortlink', existingData?.shortCode || '');
+  }, []);
+
   const methods = useForm<CreateLinkFormValue>({
     resolver: zodResolver(linkSchema),
     defaultValues: {
-      tags: [],
+      tags: existingData?.TagLink.map((tag) => tag.tag.name) || [],
     },
   });
 
@@ -189,11 +208,35 @@ export default function LinkCreatorWithModal({
       },
       qrcode: qrCodeData,
       tags: data.tags,
-      utm: data.utm,
+      utm: {
+        source: data.utm?.source,
+        medium: data.utm?.medium,
+        campaign: data.utm?.campaign,
+        term: data.utm?.term,
+        content: data.utm?.content,
+      },
     };
 
     try {
-      await createLink.mutateAsync(values);
+      if (isEditMode) {
+        await updateLink.mutateAsync({
+          shortCode:
+            data.shortlink !== existingData?.shortCode
+              ? data.shortlink
+              : undefined,
+          comments: values.comments,
+          qrcode:
+            values.shortCode !== existingData?.shortCode
+              ? qrCodeData
+              : undefined,
+          tags: selectedTags,
+          utm: data.utm,
+          expiresAt: values.expiration?.datetime,
+          expiredRedirectUrl: values.expiration?.url,
+        });
+      } else {
+        await createLink.mutateAsync(values);
+      }
     } catch (error) {
       toast.error('Failed to create link.');
     } finally {
@@ -314,7 +357,7 @@ export default function LinkCreatorWithModal({
                                   ? handleUrlChange(field.onChange)
                                   : undefined
                             }
-                            value={existingData?.originalUrl}
+                            defaultValue={existingData?.originalUrl}
                           />
                         </FormControl>
                         <div>
@@ -359,6 +402,20 @@ export default function LinkCreatorWithModal({
                               }
                               defaultValue={existingData?.shortCode}
                             />
+                            {existingData && (
+                              <Button
+                                className='rounded-r-none'
+                                type={'button'}
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    `${DOMAIN}${existingData?.shortCode}`,
+                                  );
+                                  toast.success('Copied to clipboard');
+                                }}
+                              >
+                                Copy
+                              </Button>
+                            )}
                             <Button
                               className='rounded-l-none'
                               type={'button'}
@@ -423,17 +480,6 @@ export default function LinkCreatorWithModal({
                           </PopoverContent>
                         </Popover>
                         <div className='flex flex-wrap gap-2'>
-                          {existingData?.TagLink.map((tag, idx: number) => (
-                            <Badge
-                              key={idx}
-                              variant='secondary'
-                              className='cursor-pointer'
-                              onClick={() => handleSelectTag(tag.tag.name)}
-                            >
-                              {tag.tag.name}
-                              <X className='ml-1 h-3 w-3' />
-                            </Badge>
-                          ))}
                           {selectedTags.map((tag) => (
                             <Badge
                               key={tag}
@@ -501,10 +547,11 @@ export default function LinkCreatorWithModal({
                   <div className='rounded-lg border bg-muted/50 p-4'>
                     <h3 className='text-sm font-medium'>Link Preview</h3>
                     <div className='mt-4 space-y-2'>
-                      <div className='h-4 w-3/4 rounded bg-muted'>
-                        <h5 className={'truncate text-sm'}>
-                          {DOMAIN}
-                          {watch('shortlink') || existingData?.shortCode}
+                      <div className='h-auto w-3/4 rounded'>
+                        <h5 className={'break-words text-sm'}>
+                          {DOMAIN +
+                            (watch('shortlink') || existingData?.shortCode) +
+                            buildUTMQueryString(existingData?.UTM || {})}
                         </h5>
                       </div>
                     </div>
@@ -514,8 +561,34 @@ export default function LinkCreatorWithModal({
               <Separator />
               <CardFooter className='justify-between p-6'>
                 <div className='flex gap-2'>
-                  <UTMBuilder />
-                  <ExpirationModal />
+                  {existingData || (watch('url') && watch('shortlink')) ? (
+                    <>
+                      <UTMBuilder
+                        data={existingData?.UTM || undefined}
+                        shortCode={existingData?.shortCode || undefined}
+                      />
+                      <ExpirationModal
+                        data={{
+                          datetime: existingData?.expiresAt,
+                          url: existingData?.expiredRedirectUrl,
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Alert>
+                      <Terminal className='h-4 w-4' />
+                      <AlertTitle>Heads up!</AlertTitle>
+                      <AlertDescription>
+                        Enter a URL to enable UTM and Expiration settings.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {existingData && (
+                    <ArchiveLinkDialog
+                      linkId={existingData?.id || 0}
+                      isArchived={existingData?.deletedAt || undefined}
+                    />
+                  )}
                 </div>
                 <div className={'flex gap-2'}>
                   <Button
@@ -527,9 +600,13 @@ export default function LinkCreatorWithModal({
                   >
                     Reset / Close
                   </Button>
-                  <Button type='submit' disabled={disableSubmit}>
-                    Create Link
-                  </Button>
+                  {!existingData ? (
+                    <Button type='submit' disabled={disableSubmit}>
+                      Create Link
+                    </Button>
+                  ) : (
+                    <Button type={'submit'}>Update Link</Button>
+                  )}
                 </div>
               </CardFooter>
             </form>

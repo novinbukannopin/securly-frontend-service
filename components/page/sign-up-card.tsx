@@ -23,6 +23,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { BarChart, Globe, Laptop, LinkIcon, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const registerAccountSchema = z
   .object({
@@ -51,6 +52,8 @@ export default function SignUpCard() {
     resolver: zodResolver(registerAccountSchema),
   });
 
+  const router = useRouter();
+
   async function onSubmit(values: RegisterAccountSchemaValues) {
     try {
       const res = await client.post('/auth/register', {
@@ -59,6 +62,7 @@ export default function SignUpCard() {
       });
       if (res.status === 201) {
         toast.success('Account created successfully');
+        router.push('/login');
       }
     } catch (e) {
       if (e instanceof AxiosError) {
@@ -74,7 +78,7 @@ export default function SignUpCard() {
           <div className='flex items-center space-x-3'>
             <Globe className='h-6 w-6 text-gray-500 dark:text-white' />
             <div className='text-sm text-gray-500 dark:text-white'>
-              securly.com/dashboard
+              <Link href={'/'}>securly.com/dashboard</Link>
             </div>
           </div>
         </div>

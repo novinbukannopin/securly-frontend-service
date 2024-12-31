@@ -1,38 +1,23 @@
 'use client';
 
 import { format } from 'date-fns';
-import { Copy, ExternalLink, MoreVertical, QrCode } from 'lucide-react';
+import { Archive, Clock, Copy } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import { Link } from '@/types/link';
 import { BACKEND_URL } from '@/lib/env';
 import { toast } from 'sonner';
-import * as React from 'react';
+import React from 'react';
 import CategoryBadges from '@/components/custom/badges-card';
 
 interface LinkCardProps {
@@ -46,6 +31,7 @@ export default function LinkCard({
   displayType,
   onClick,
 }: LinkCardProps) {
+  const isArchivied = link.deletedAt !== null;
   const getDomain = (url: string) => {
     try {
       const domain = new URL(url).hostname;
@@ -75,150 +61,101 @@ export default function LinkCard({
   };
 
   return (
-    <Card
-      className={`group relative w-full cursor-pointer ${
-        displayType === 'grid' ? 'h-[120px]' : ''
-      }`}
-    >
-      <CardContent className='flex w-full flex-wrap items-center gap-3 p-4'>
-        <Avatar className='h-8 w-8 shrink-0'>
-          <AvatarImage
-            src={getFaviconUrl(link.originalUrl) || ''}
-            alt={getDomain(link.originalUrl)}
-          />
-          <AvatarFallback className='text-xs'>
-            {getFallbackLetter(link.originalUrl)}
-          </AvatarFallback>
-        </Avatar>
+    <div className='relative'>
+      <Card
+        className={cn(
+          'transition-opacity',
+          isArchivied && 'opacity-75',
+          displayType === 'grid' ? 'h-[120px]' : '',
+        )}
+      >
+        <CardContent className='flex w-full flex-wrap items-center gap-3 p-4'>
+          <Avatar className='h-8 w-8 shrink-0'>
+            <AvatarImage
+              src={getFaviconUrl(link.originalUrl) || ''}
+              alt={getDomain(link.originalUrl)}
+            />
+            <AvatarFallback className='text-xs'>
+              {getFallbackLetter(link.originalUrl)}
+            </AvatarFallback>
+          </Avatar>
 
-        <div className='w-full flex-1 space-y-1 sm:w-auto'>
-          <div className='flex flex-wrap items-center'>
-            <span className='text-sm text-muted-foreground'>
-              {BACKEND_URL}/
-            </span>
-            <span className='mr-2 line-clamp-1 font-medium'>
-              {link.shortCode}
-            </span>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='h-6 w-6 opacity-0 group-hover:opacity-100'
-                    onClick={() => copyShortLink(link.shortCode)}
-                  >
-                    <Copy className='h-3 w-3' />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Copy short link</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <div className='flex flex-wrap items-center gap-2'>
-            <a
-              href={link.originalUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='line-clamp-1 text-sm text-muted-foreground hover:text-foreground'
-            >
-              {getDomain(link.originalUrl)}
-            </a>
-            <span className='text-sm text-muted-foreground'>•</span>
-            <span className='text-xs text-muted-foreground'>
-              {format(new Date(link.createdAt), 'MMM d, yyyy')}
-            </span>
-          </div>
-        </div>
-
-        <div className='flex flex-wrap items-center gap-2 sm:flex-nowrap'>
-          <CategoryBadges
-            categories={link.TagLink.map((tagLink) => tagLink.tag.name)}
-            clicks={link._count.Click}
-          />
-          <Dialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' size='icon' className='h-8 w-8'>
-                  <MoreVertical className='h-4 w-4' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end' className='w-48'>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem>
-                    <QrCode className='mr-2 h-4 w-4' />
-                    QR Code
-                  </DropdownMenuItem>
-                </DialogTrigger>
-                <DropdownMenuItem>
-                  <ExternalLink className='mr-2 h-4 w-4' />
-                  Open
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className='text-destructive'>
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DialogContent className='sm:max-w-md'>
-              <DialogHeader>
-                <DialogTitle>Link Details</DialogTitle>
-              </DialogHeader>
-              <div className='space-y-4'>
-                <div className='space-y-2'>
-                  <Label>Destination URL</Label>
-                  <Input value={link.originalUrl} readOnly />
-                </div>
-
-                <div className='space-y-2'>
-                  <Label>Short Link</Label>
-                  <div className='flex gap-2'>
-                    <Input value={`dub.sh/${link.shortCode}`} readOnly />
+          <div className='w-full flex-1 space-y-1 sm:w-auto'>
+            <div className='flex flex-wrap items-center'>
+              <span className='text-sm text-muted-foreground'>
+                {BACKEND_URL}/
+              </span>
+              <span className='mr-2 line-clamp-1 font-medium'>
+                {link.shortCode}
+              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
                     <Button
-                      variant='secondary'
+                      variant='ghost'
                       size='icon'
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          `dub.sh/${link.shortCode}`,
-                        )
-                      }
+                      className='h-6 w-6 opacity-0 group-hover:opacity-100'
+                      onClick={() => copyShortLink(link.shortCode)}
                     >
-                      <Copy className='h-4 w-4' />
+                      <Copy className='h-3 w-3' />
                     </Button>
-                  </div>
-                </div>
+                  </TooltipTrigger>
+                  <TooltipContent>Copy short link</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className='flex flex-wrap items-center gap-2'>
+              <a
+                href={link.originalUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='line-clamp-1 text-sm text-muted-foreground hover:text-foreground'
+              >
+                {getDomain(link.originalUrl)}
+              </a>
+              <span className='text-sm text-muted-foreground'>•</span>
+              <span className='text-xs text-muted-foreground'>
+                {format(new Date(link.createdAt), 'MMM d, yyyy')}
+              </span>
+            </div>
+          </div>
 
-                <div className='space-y-2'>
-                  <Label>QR Code</Label>
-                  <div className='rounded-lg border bg-muted/50 p-6'>
-                    <div className='aspect-square w-full max-w-sm rounded-lg bg-white p-4'>
-                      <img
-                        src={link.qrcode}
-                        alt='QR Code'
-                        className='h-full w-full'
-                      />
-                    </div>
-                  </div>
-                </div>
+          <div className='flex flex-wrap items-center gap-2 sm:flex-nowrap'>
+            <CategoryBadges
+              categories={link.TagLink.map((tagLink) => tagLink.tag.name)}
+              clicks={link._count.Click}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-                {link.TagLink && link.TagLink.length > 0 && (
-                  <div className='space-y-2'>
-                    <Label>Tags</Label>
-                    <div className='flex flex-wrap gap-1'>
-                      {link.TagLink.map((tagLink, index) => (
-                        <Badge key={index} variant='secondary'>
-                          {tagLink.tag.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </CardContent>
-    </Card>
+      {isArchivied && (
+        <>
+          <div
+            className='pointer-events-none absolute inset-0 overflow-hidden'
+            aria-hidden='true'
+          >
+            <div className='absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#fbbf24_10px,#fbbf24_20px)] opacity-20' />
+          </div>
+
+          <Badge
+            variant='secondary'
+            className={cn(
+              'absolute -right-2 -top-2 shadow-md',
+              isArchivied
+                ? 'bg-yellow-100 text-yellow-900 hover:bg-yellow-100'
+                : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-100',
+            )}
+          >
+            {isArchivied ? (
+              <Clock className='mr-1 h-3 w-3' />
+            ) : (
+              <Archive className='mr-1 h-3 w-3' />
+            )}
+            {isArchivied ? 'Archived' : 'Expired'}
+          </Badge>
+        </>
+      )}
+    </div>
   );
 }

@@ -21,10 +21,13 @@ export type LinkType =
   | 'BLOCKED';
 
 export interface CreateLinkInput {
-  originalUrl: string;
+  originalUrl?: string;
   shortCode?: string;
   comments?: string;
-  type: string;
+  type?: string;
+  // todo fix this, fix mutation expiration when update
+  expiresAt?: string;
+  expiredRedirectUrl?: string;
   expiration?: {
     datetime?: string;
     url?: string;
@@ -50,6 +53,7 @@ export interface ResponseLinks {
   page: number;
   total: number;
   totalPages: number;
+  tags: string[];
 
   [property: string]: any;
 }

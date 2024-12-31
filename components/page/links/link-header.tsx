@@ -8,22 +8,27 @@ import {
   List,
   ListOrderedIcon as AlphabeticalSort,
   Search,
+  Tag,
 } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 interface LinksHeaderProps {
   onSearchChange: (search: string) => void;
   onFilterChange: (filter: string) => void;
   onDisplayChange: (display: 'grid' | 'list') => void;
+  onTagsChange: (tags: string[]) => void;
+  availableTags: string[];
   children?: React.ReactNode;
 }
 
@@ -31,10 +36,13 @@ export function LinksHeader({
   onSearchChange,
   onFilterChange,
   onDisplayChange,
+  onTagsChange,
+  availableTags,
   children,
 }: LinksHeaderProps) {
   const [activeFilter, setActiveFilter] = useState('recent');
   const [activeDisplay, setActiveDisplay] = useState<'grid' | 'list'>('list');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
@@ -44,6 +52,14 @@ export function LinksHeader({
   const handleDisplayChange = (display: 'grid' | 'list') => {
     setActiveDisplay(display);
     onDisplayChange(display);
+  };
+
+  const handleTagToggle = (tag: string) => {
+    const updatedTags = selectedTags.includes(tag)
+      ? selectedTags.filter((t) => t !== tag)
+      : [...selectedTags, tag];
+    setSelectedTags(updatedTags);
+    onTagsChange(updatedTags);
   };
 
   const getFilterIcon = () => {
@@ -126,6 +142,35 @@ export function LinksHeader({
               <List className='mr-2 h-4 w-4' />
               List view
             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant='outline'
+              size='sm'
+              className='flex-1 basis-0 whitespace-nowrap'
+            >
+              <Tag className='mr-2 h-4 w-4' />
+              Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='start' className='w-[200px]'>
+            {availableTags.map((tag) => (
+              <DropdownMenuCheckboxItem
+                key={tag}
+                checked={selectedTags.includes(tag)}
+                onCheckedChange={() => handleTagToggle(tag)}
+              >
+                <Badge
+                  variant={selectedTags.includes(tag) ? 'default' : 'outline'}
+                  className='mr-2'
+                >
+                  {tag}
+                </Badge>
+              </DropdownMenuCheckboxItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

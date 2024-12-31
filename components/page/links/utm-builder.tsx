@@ -20,16 +20,26 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useFormContext } from 'react-hook-form';
+import { DOMAIN } from '@/lib/env';
+import { buildUTMQueryString } from '@/lib/utils';
 
-export function UTMBuilder() {
+type UTM = {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+};
+
+export function UTMBuilder({
+  data,
+  shortCode,
+}: {
+  data?: UTM;
+  shortCode?: string;
+}) {
   const { setValue, watch } = useFormContext();
-  const utmData = watch('utm') || {
-    source: '',
-    medium: '',
-    campaign: '',
-    term: '',
-    content: '',
-  };
+  const utmData = watch('utm');
 
   const [open, setOpen] = useState(false);
 
@@ -51,7 +61,7 @@ export function UTMBuilder() {
           <Globe className='h-4 w-4' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='h-auto sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             UTM Builder
@@ -69,16 +79,30 @@ export function UTMBuilder() {
         </DialogHeader>
         <div className='grid gap-4 py-4'>
           {['source', 'medium', 'campaign', 'term', 'content'].map((field) => (
-            <div key={field} className={'grid gap-2'}>
+            <div key={field} className={'grid gap-2 sm:max-w-[377px]'}>
               <Label htmlFor={`utm.${field}`}>{field}</Label>
               <Input
                 id={`utm.${field}`}
                 placeholder={`Enter ${field}`}
                 onChange={(e) => setValue(`utm.${field}`, e.target.value)}
-                value={utmData[field]}
+                defaultValue={data ? data[field as keyof UTM] || '' : ''}
               />
             </div>
           ))}
+          <div className='h-full rounded-lg border bg-muted/50 p-4 sm:max-w-[377px]'>
+            <h3 className='text-sm font-medium'>Link Preview</h3>
+            <div className='mt-4'>
+              <div className='rounded'>
+                <h5 className={'break-words text-sm'}>
+                  <p>
+                    {DOMAIN +
+                      (watch('shortlink') || shortCode) +
+                      buildUTMQueryString(utmData || data)}
+                  </p>
+                </h5>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className='flex justify-end gap-2'>
