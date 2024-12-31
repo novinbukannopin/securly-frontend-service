@@ -1,23 +1,19 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
-  AudioWaveform,
   BookOpen,
-  Bot,
-  Command,
   Frame,
   GalleryVerticalEnd,
+  LineChart,
+  Link2,
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -27,115 +23,124 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import {AnalyticsSidebar} from "@/components/page/analytics-sidebar";
+} from '@/components/ui/sidebar';
+import { AnalyticsSidebar } from '@/components/page/analytics-sidebar';
 
-// This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: 'Acme Inc',
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: 'Enterprise',
     },
   ],
   navMain: [
     {
-      title: "Link",
-      url: "#",
-      icon: SquareTerminal,
+      title: 'Link',
+      url: '/links',
+      icon: Link2,
       isActive: true,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: Bot,
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
+      title: 'Analytics',
+      url: '/analytics',
+      icon: LineChart,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: 'Clicks',
+          url: '/analytics#click',
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: 'Count',
+          url: '/analytics#count',
         },
         {
-          title: "Tutorials",
-          url: "#",
+          title: 'Type',
+          url: '/analytics#type',
         },
         {
-          title: "Changelog",
-          url: "#",
+          title: 'Tags',
+          url: '/analytics#tags',
         },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
+      title: 'Documentation',
+      url: '#',
+      icon: BookOpen,
+      items: [
+        {
+          title: 'Introduction',
+          url: '#',
+        },
+        {
+          title: 'Get Started',
+          url: '#',
+        },
+        {
+          title: 'Tutorials',
+          url: '#',
+        },
+        {
+          title: 'Changelog',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Settings',
+      url: '#',
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: 'Account',
+          url: '/settings/account',
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: 'Billing',
+          url: '/settings/billing',
         },
       ],
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
+      name: 'Design Engineering',
+      url: '#',
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
+      name: 'Sales & Marketing',
+      url: '#',
       icon: PieChart,
     },
     {
-      name: "Travel",
-      url: "#",
+      name: 'Travel',
+      url: '#',
       icon: Map,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <GalleryVerticalEnd className="size-4" />
+            <SidebarMenuButton size='lg' asChild>
+              <a href='/dashboard'>
+                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
+                  <GalleryVerticalEnd className='size-4' />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Securly</span>
-                  <span className="">v1.0.0</span>
+                <div className='flex flex-col gap-0.5 leading-none'>
+                  <span className='font-semibold'>Securly</span>
+                  <span className=''>v1.0.0</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -145,11 +150,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <AnalyticsSidebar/>
+      <AnalyticsSidebar />
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

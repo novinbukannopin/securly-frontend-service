@@ -1,6 +1,6 @@
-"use client";
-import { ChevronsDown, Github, Menu } from "lucide-react";
-import React from "react";
+'use client';
+import { ChevronsDown, Menu } from 'lucide-react';
+import React from 'react';
 import {
   Sheet,
   SheetContent,
@@ -8,8 +8,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../ui/sheet";
-import { Separator } from "../ui/separator";
+} from '../ui/sheet';
+import { Separator } from '../ui/separator';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,11 +17,11 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "../ui/navigation-menu";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import Image from "next/image";
-import { ToggleTheme } from "./toogle-theme";
+} from '../ui/navigation-menu';
+import { Button } from '../ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ToggleTheme } from './toogle-theme';
 
 interface RouteProps {
   href: string;
@@ -35,83 +35,87 @@ interface FeatureProps {
 
 const routeList: RouteProps[] = [
   {
-    href: "#testimonials",
-    label: "Testimonials",
+    href: '#testimonials',
+    label: 'Testimonials',
   },
   {
-    href: "#team",
-    label: "Team",
+    href: '#team',
+    label: 'Team',
   },
   {
-    href: "#how-it-works",
-    label: "How It Works",
+    href: '#contact',
+    label: 'Contact',
   },
   {
-    href: "#contact",
-    label: "Contact",
-  },
-  {
-    href: "#faq",
-    label: "FAQ",
+    href: '#faq',
+    label: 'FAQ',
   },
 ];
 
 const featureList: FeatureProps[] = [
   {
-    title: "Secure URL Shortening",
-    description: "Shorten links with confidence. Our AI ensures every link is safe.",
+    title: 'Secure URL Shortening',
+    description:
+      'Shorten links with confidence. Our AI ensures every links is safe.',
   },
   {
-    title: "Advanced Analytics",
-    description: "Track clicks, locations, devices, and more with detailed reports.",
+    title: 'Advanced Analytics',
+    description:
+      'Track clicks, locations, devices, and more with detailed reports.',
   },
   {
-    title: "Custom URL Options",
-    description: "Create branded short links that match your style and domain.",
+    title: 'Custom URL Options',
+    description: 'Create branded short links that match your style and domain.',
   },
 ];
-
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <header className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
-      <Link href="/" className="font-bold text-lg flex items-center">
-        <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+    <header className='sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border border-secondary bg-card bg-opacity-15 p-2 shadow-inner md:w-[70%] lg:w-[75%] lg:max-w-screen-xl'>
+      <Link href='/' className='flex items-center text-lg font-bold'>
+        <Image
+          src={'/securly.svg'}
+          alt={'logo'}
+          width={24}
+          height={24}
+          className={'mr-2'}
+        />
+        {/*<ChevronsDown className='mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/70 to-primary text-white' />*/}
         Securly
       </Link>
       {/* <!-- Mobile --> */}
-      <div className="flex items-center lg:hidden">
+      <div className='flex items-center lg:hidden'>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Menu
               onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer lg:hidden"
+              className='cursor-pointer lg:hidden'
             />
           </SheetTrigger>
 
           <SheetContent
-            side="left"
-            className="flex flex-col justify-between rounded-tr-2xl rounded-br-2xl bg-card border-secondary"
+            side='left'
+            className='flex flex-col justify-between rounded-br-2xl rounded-tr-2xl border-secondary bg-card'
           >
             <div>
-              <SheetHeader className="mb-4 ml-4">
-                <SheetTitle className="flex items-center">
-                  <Link href="/" className="flex items-center">
-                    <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+              <SheetHeader className='mb-4 ml-4'>
+                <SheetTitle className='flex items-center'>
+                  <Link href='/' className='flex items-center'>
+                    <ChevronsDown className='mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/70 to-primary text-white' />
                     Securly
                   </Link>
                 </SheetTitle>
               </SheetHeader>
 
-              <div className="flex flex-col gap-2">
+              <div className='flex flex-col gap-2'>
                 {routeList.map(({ href, label }) => (
                   <Button
                     key={href}
                     onClick={() => setIsOpen(false)}
                     asChild
-                    variant="ghost"
-                    className="justify-start text-base"
+                    variant='ghost'
+                    className='justify-start text-base'
                   >
                     <Link href={href}>{label}</Link>
                   </Button>
@@ -119,8 +123,8 @@ export const Navbar = () => {
               </div>
             </div>
 
-            <SheetFooter className="flex-col sm:flex-col justify-start items-start">
-              <Separator className="mb-2" />
+            <SheetFooter className='flex-col items-start justify-start sm:flex-col'>
+              <Separator className='mb-2' />
 
               <ToggleTheme />
             </SheetFooter>
@@ -129,31 +133,31 @@ export const Navbar = () => {
       </div>
 
       {/* <!-- Desktop --> */}
-      <NavigationMenu className="hidden lg:block mx-auto">
+      <NavigationMenu className='mx-auto hidden lg:block'>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-card text-base">
+            <NavigationMenuTrigger className='bg-card text-base'>
               Features
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
+              <div className='grid w-[600px] grid-cols-2 gap-5 p-4'>
                 <Image
-                  src="/images/securly-demo.png"
-                  alt="Securly Features"
-                  className="h-full w-full rounded-md object-cover"
+                  src='/images/securly-demo.png'
+                  alt='Securly Features'
+                  className='h-full w-full rounded-md object-cover'
                   width={600}
                   height={600}
                 />
-                <ul className="flex flex-col gap-2">
+                <ul className='flex flex-col gap-2'>
                   {featureList.map(({ title, description }) => (
                     <li
                       key={title}
-                      className="rounded-md p-3 text-sm hover:bg-muted"
+                      className='rounded-md p-3 text-sm hover:bg-muted'
                     >
-                      <p className="mb-1 font-semibold leading-none text-foreground">
+                      <p className='mb-1 font-semibold leading-none text-foreground'>
                         {title}
                       </p>
-                      <p className="line-clamp-2 text-muted-foreground">
+                      <p className='line-clamp-2 text-muted-foreground'>
                         {description}
                       </p>
                     </li>
@@ -166,7 +170,7 @@ export const Navbar = () => {
           <NavigationMenuItem>
             {routeList.map(({ href, label }) => (
               <NavigationMenuLink key={href} asChild>
-                <Link href={href} className="text-base px-3">
+                <Link href={href} className='px-3 text-base'>
                   {label}
                 </Link>
               </NavigationMenuLink>
@@ -175,14 +179,17 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <div className="hidden lg:flex gap-3">
+      <div className='hidden gap-3 lg:flex'>
         <ToggleTheme />
 
-        <Button asChild variant={"secondary"}>
-          <Link href="/login">Try Securly</Link>
+        <Button asChild>
+          <Link href='/login'>Login</Link>
+        </Button>
+
+        <Button asChild variant={'link'}>
+          <Link href='/register'>Register</Link>
         </Button>
       </div>
     </header>
   );
 };
-

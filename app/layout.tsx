@@ -1,34 +1,37 @@
-"use client"
+'use client';
 
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/layout/navbar";
-import { ThemeProvider } from "@/components/layout/theme-provider";
-import {usePathname} from "next/navigation";
-const inter = Inter({ subsets: ["latin"] });
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { cn } from '@/lib/utils';
+import { Navbar } from '@/components/layout/navbar';
+import { ThemeProvider } from '@/components/layout/theme-provider';
+import { usePathname } from 'next/navigation';
+import ReactQueryProvider from '@/providers/react-query-providers.';
+import { Toaster as SonnerToaster } from 'sonner';
 
-export default function RootLayout({
+const inter = Inter({ subsets: ['latin'] });
+
+export default function Main({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const pathname = usePathname();
-  const noNavbarPages = ["/login", "/register", "/dashboard"];
-  const showNavbar = !noNavbarPages.includes(pathname);
+  const noNavbarPages = ['/'];
+  const showNavbar = noNavbarPages.includes(pathname);
 
   return (
-    <html lang="pt-br" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background", inter.className)}>
+    <html lang='pt-br' suppressHydrationWarning>
+      <body className={cn('min-h-screen bg-background', inter.className)}>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
+          attribute='class'
+          defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
           {showNavbar && <Navbar />}
-          {children}
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <SonnerToaster />
         </ThemeProvider>
       </body>
     </html>

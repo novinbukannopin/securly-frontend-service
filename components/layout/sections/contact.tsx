@@ -1,14 +1,14 @@
-"use client";
+'use client';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
-import { Building2, Clock, Mail, Phone } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@/components/ui/card';
+import { Building2, Clock, Mail, Phone } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -16,17 +16,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(255),
@@ -40,11 +40,11 @@ export const ContactSection = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      subject: "Web Development",
-      message: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      subject: 'Web Development',
+      message: '',
     },
   });
 
@@ -58,53 +58,54 @@ export const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="container py-24 sm:py-32">
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <section id='contact' className='container py-24 sm:py-32'>
+      <section className='grid grid-cols-1 gap-8 md:grid-cols-2'>
         <div>
-          <div className="mb-4">
-            <h2 className="text-lg text-primary mb-2 tracking-wider">
+          <div className='mb-4'>
+            <h2 className='mb-2 text-lg tracking-wider text-primary'>
               Contact
             </h2>
 
-            <h2 className="text-3xl md:text-4xl font-bold">Connect With Us</h2>
+            <h2 className='text-3xl font-bold md:text-4xl'>Get in Touch</h2>
           </div>
-          <p className="mb-8 text-muted-foreground lg:w-5/6">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            ipsam sint enim exercitationem ex autem corrupti quas tenetur
+          <p className='mb-8 text-muted-foreground lg:w-5/6'>
+            We&apos;re here to help and answer any questions you might have.
+            Reach out to us and let&apos;s make something great together. Your
+            feedback and ideas are valuable to us!
           </p>
 
-          <div className="flex flex-col gap-4">
+          <div className='flex flex-col gap-4'>
             <div>
-              <div className="flex gap-2 mb-1">
+              <div className='mb-1 flex gap-2'>
                 <Building2 />
-                <div className="font-bold">Find us</div>
+                <div className='font-bold'>Find us</div>
               </div>
 
-              <div>742 Evergreen Terrace, Springfield, IL 62704</div>
+              <div>Jl. Sudirman No.45, Jakarta, Indonesia</div>
             </div>
 
             <div>
-              <div className="flex gap-2 mb-1">
+              <div className='mb-1 flex gap-2'>
                 <Phone />
-                <div className="font-bold">Call us</div>
+                <div className='font-bold'>Call us</div>
               </div>
 
-              <div>+1 (619) 123-4567</div>
+              <div>+62 85 156 265 910</div>
             </div>
 
             <div>
-              <div className="flex gap-2 mb-1">
+              <div className='mb-1 flex gap-2'>
                 <Mail />
-                <div className="font-bold">Mail US</div>
+                <div className='font-bold'>Mail US</div>
               </div>
 
-              <div>leomirandadev@gmail.com</div>
+              <div>work@secur.ly</div>
             </div>
 
             <div>
-              <div className="flex gap-2">
+              <div className='flex gap-2'>
                 <Clock />
-                <div className="font-bold">Visit us</div>
+                <div className='font-bold'>Visit us</div>
               </div>
 
               <div>
@@ -115,23 +116,23 @@ export const ContactSection = () => {
           </div>
         </div>
 
-        <Card className="bg-muted/60 dark:bg-card">
-          <CardHeader className="text-primary text-2xl"> </CardHeader>
+        <Card className='bg-muted/60 dark:bg-card'>
+          <CardHeader className='text-2xl text-primary'> </CardHeader>
           <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="grid w-full gap-4"
+                className='grid w-full gap-4'
               >
-                <div className="flex flex-col md:!flex-row gap-8">
+                <div className='flex flex-col gap-8 md:!flex-row'>
                   <FormField
                     control={form.control}
-                    name="firstName"
+                    name='firstName'
                     render={({ field }) => (
-                      <FormItem className="w-full">
+                      <FormItem className='w-full'>
                         <FormLabel>First Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Leopoldo" {...field} />
+                          <Input placeholder='Leopoldo' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -139,12 +140,12 @@ export const ContactSection = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="lastName"
+                    name='lastName'
                     render={({ field }) => (
-                      <FormItem className="w-full">
+                      <FormItem className='w-full'>
                         <FormLabel>Last Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Miranda" {...field} />
+                          <Input placeholder='Miranda' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -152,17 +153,17 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className='flex flex-col gap-1.5'>
                   <FormField
                     control={form.control}
-                    name="email"
+                    name='email'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
-                            type="email"
-                            placeholder="leomirandadev@gmail.com"
+                            type='email'
+                            placeholder='leomirandadev@gmail.com'
                             {...field}
                           />
                         </FormControl>
@@ -172,10 +173,10 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className='flex flex-col gap-1.5'>
                   <FormField
                     control={form.control}
-                    name="subject"
+                    name='subject'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Subject</FormLabel>
@@ -185,21 +186,21 @@ export const ContactSection = () => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a subject" />
+                              <SelectValue placeholder='Select a subject' />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="Web Development">
+                            <SelectItem value='Web Development'>
                               Web Development
                             </SelectItem>
-                            <SelectItem value="Mobile Development">
+                            <SelectItem value='Mobile Development'>
                               Mobile Development
                             </SelectItem>
-                            <SelectItem value="Figma Design">
+                            <SelectItem value='Figma Design'>
                               Figma Design
                             </SelectItem>
-                            <SelectItem value="REST API">REST API</SelectItem>
-                            <SelectItem value="FullStack Project">
+                            <SelectItem value='REST API'>REST API</SelectItem>
+                            <SelectItem value='FullStack Project'>
                               FullStack Project
                             </SelectItem>
                           </SelectContent>
@@ -210,18 +211,18 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className='flex flex-col gap-1.5'>
                   <FormField
                     control={form.control}
-                    name="message"
+                    name='message'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Message</FormLabel>
                         <FormControl>
                           <Textarea
                             rows={5}
-                            placeholder="Your message..."
-                            className="resize-none"
+                            placeholder='Your message...'
+                            className='resize-none'
                             {...field}
                           />
                         </FormControl>
@@ -232,7 +233,7 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <Button className="mt-4">Send message</Button>
+                <Button className='mt-4'>Send message</Button>
               </form>
             </Form>
           </CardContent>
