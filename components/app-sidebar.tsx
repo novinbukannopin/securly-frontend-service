@@ -105,10 +105,6 @@ const data = {
           title: 'Billing',
           url: '/settings/billing',
         },
-        {
-          title: 'Limits',
-          url: '/settings/limits',
-        },
       ],
     },
   ],

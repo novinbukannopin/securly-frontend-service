@@ -56,7 +56,7 @@ export default function SignInPage() {
       if (res.status === 200) {
         toast.success('Login successful');
         Cookies.set('token', res.data.tokens.access.token);
-        router.replace('/dashboard');
+        router.replace('/links');
       }
     } catch (e) {
       if (e instanceof AxiosError) {
@@ -81,7 +81,7 @@ export default function SignInPage() {
           <div className='flex items-center space-x-3'>
             <Globe className='h-6 w-6 text-gray-500 dark:text-white' />
             <div className='text-sm text-gray-500 dark:text-white'>
-              securly.com/dashboard
+              <Link href={'/'}>securly.com/dashboard</Link>
             </div>
           </div>
         </div>

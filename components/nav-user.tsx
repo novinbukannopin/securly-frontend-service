@@ -28,6 +28,7 @@ import {
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useGetProfile } from '@/service/queries/profile';
+import Link from 'next/link';
 
 export function NavUser({
   user,
@@ -99,14 +100,18 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
+              <Link href={'/settings/account'}>
+                <DropdownMenuItem>
+                  <BadgeCheck />
+                  Account
+                </DropdownMenuItem>
+              </Link>
+              <Link href={'/settings/billing'}>
+                <DropdownMenuItem>
+                  <CreditCard />
+                  Billing
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <Bell />
                 Notifications
