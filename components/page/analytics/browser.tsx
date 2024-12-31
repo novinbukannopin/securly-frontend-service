@@ -55,14 +55,7 @@ export function BrowserChartAnalytics() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            layout='vertical'
-            margin={{
-              right: 16,
-            }}
-          >
+          <BarChart accessibilityLayer data={chartData} layout='vertical'>
             <CartesianGrid horizontal={false} />
             <YAxis
               dataKey='month'

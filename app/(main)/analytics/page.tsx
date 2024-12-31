@@ -10,13 +10,14 @@ import ClickChartAnalytics from '@/components/page/analytics/click';
 export default function Page() {
   const response = useGetAnalytics();
   const analytics = response.data;
-  console.log(analytics);
+
+  const topClicks = analytics?.topLinks;
 
   return (
     <>
       <div className='space-y-4 py-4'>
         <h1 className='text-xl font-semibold'>Analytics</h1>
-        <ClickChartAnalytics />
+        <ClickChartAnalytics topClick={topClicks || []} />
         <CountChartAnalytics links={analytics?.links} />
         <div className={'grid grid-cols-1 gap-4 lg:grid-cols-2'}>
           <TypeChartAnalytics list={analytics?.type?.list} />

@@ -82,12 +82,26 @@ interface LinkMetric {
   };
 }
 
-export interface ClickData {
-  date: string; // Format tanggal YYYY-MM-DD
-  totalClicks: number; // Total klik pada tanggal tertentu
+interface ClickInsight {
+  data: {
+    date: string;
+    totalClicks: number;
+  }[];
+  totalClick: number;
 }
 
-export interface ClicksResponse {
-  data: ClickData[]; // Array data klik per tanggal
-  totalClick: number; // Total semua klik dalam rentang waktu yang diminta
+interface InteractionInsight {
+  location: Record<string, number>;
+  region: Record<string, number>;
+  country: Record<string, number>;
+  browser: Record<string, number>;
+  os: Record<string, number>;
+  osVersion: Record<string, number>;
+  cpuArch: Record<string, number>;
+  deviceType: Record<string, number>;
+}
+
+export interface InsightsResponse {
+  click: ClickInsight;
+  interaction: InteractionInsight;
 }

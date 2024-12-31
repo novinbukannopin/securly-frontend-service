@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { addDays, eachDayOfInterval, format, subDays } from 'date-fns';
+import { useState } from 'react';
+import { addDays, format, subDays } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
@@ -29,23 +30,26 @@ import {
 } from '@/components/ui/select';
 import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { useGetClicksAnalytics } from '@/service/queries/click-analytics';
-import { BrowserChartAnalytics } from '@/components/page/analytics/browser';
+import TabsWrapperAnalytics from '@/components/page/analytics/tabs-wrapper';
+import { TableAnalytics } from '@/components/page/analytics/table';
+import { AnalyticsResponse } from '@/types/analytics';
 
-const generateSampleData = (startDate: Date, endDate: Date) => {
-  const days = eachDayOfInterval({ start: startDate, end: endDate });
-  return days.map((date) => ({
-    date: format(date, 'MMM dd'),
-    clicks: Math.floor(Math.random() * 100),
-  }));
-};
-
-export default function ClickChartAnalytics() {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+export default function ClickChartAnalytics({
+  topClick,
+}: {
+  topClick: AnalyticsResponse['topLinks'];
+}) {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: subDays(new Date(), 7),
     to: new Date(),
   });
 
-  const [filter, setFilter] = React.useState('7d');
+  const [filter, setFilter] = useState('7d');
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
+
+  const handleRowClick = (code: string) => {
+    setSelectedCode(code);
+  };
 
   const { data, isLoading, error } = useGetClicksAnalytics({
     startDate: dateRange?.from
@@ -53,6 +57,7 @@ export default function ClickChartAnalytics() {
       : undefined,
     endDate: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
     filter: filter === '24h' ? '24h' : filter === '7d' ? '7 days' : '28 days',
+    shortCode: selectedCode || undefined,
   });
 
   const handleFilterChange = (newFilter: string) => {
@@ -77,6 +82,17 @@ export default function ClickChartAnalytics() {
     setDateRange({ from: newFrom, to: now });
   };
 
+  const insight = [
+    'location',
+    'region',
+    'country',
+    'os',
+    'osVersion',
+    'browser',
+    'cpuArch',
+    'deviceType',
+  ];
+
   return (
     <div className={'space-y-4'}>
       <CardHeader className='flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row'>
@@ -90,12 +106,12 @@ export default function ClickChartAnalytics() {
           <button className='flex flex-1 flex-col justify-center gap-1 border-t px-0 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6'>
             <span className='text-xs text-muted-foreground'>Total Clicks</span>
             <span className='text-lg font-bold leading-none sm:text-3xl'>
-              {data?.totalClick}
+              {data?.click.totalClick}
             </span>
           </button>
         </div>
       </CardHeader>
-      <Card className=''>
+      <Card className='' id={'click'}>
         <CardHeader>
           <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
             <div>
@@ -190,7 +206,7 @@ export default function ClickChartAnalytics() {
               className='h-[350px] w-full'
             >
               <ResponsiveContainer width='100%' height='100%'>
-                <LineChart data={data?.data || []}>
+                <LineChart data={data?.click?.data || []}>
                   <XAxis
                     dataKey='date'
                     stroke='#888888'
@@ -225,8 +241,13 @@ export default function ClickChartAnalytics() {
         </CardContent>
       </Card>
 
-      <div className={'grid grid-cols-3'}>
-        <BrowserChartAnalytics />
+      <div className={'grid grid-cols-3 gap-4'}>
+        <div className={'col-span-2 grid'}>
+          <TableAnalytics topClick={topClick} onRowClick={handleRowClick} />
+        </div>
+        <div className={'grid grid-cols-1'}>
+          <TabsWrapperAnalytics data={data} />
+        </div>
       </div>
     </div>
   );

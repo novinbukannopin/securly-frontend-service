@@ -18,7 +18,7 @@ export default function DashboardRedirectHandler() {
         sameSite: 'strict', // Melindungi dari serangan CSRF
       });
 
-      router.replace('/dashboard');
+      router.replace('/links');
     } else {
       router.push('/login');
     }

@@ -49,7 +49,7 @@ export function NavMain({
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && (
                     <a href={item.url}>
-                      <item.icon />
+                      <item.icon className={'h-4 w-4'} />
                     </a>
                   )}
                   {!item.items ? (

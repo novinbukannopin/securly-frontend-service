@@ -78,33 +78,37 @@ export default function Page() {
           displayType={displayType}
           selectedTags={selectedTags}
         />
-        <div className='flex items-center'>
-          <div className={'w-full text-sm'}>
-            Showing {data?.links?.length || 0} of {data?.total || 0} items
-          </div>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(page - 1)}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(index + 1)}
-                    isActive={page === index + 1}
-                  >
-                    {index + 1}
-                  </PaginationLink>
+        {data?.links?.length === 0 ? (
+          <div>No links found</div>
+        ) : (
+          <div className='flex items-center'>
+            <div className={'w-full text-sm'}>
+              Showing {data?.links?.length || 0} of {data?.total || 0} items
+            </div>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handlePageChange(page - 1)}
+                  />
                 </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext onClick={() => handlePageChange(page + 1)} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(index + 1)}
+                      isActive={page === index + 1}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext onClick={() => handlePageChange(page + 1)} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
     </>
   );

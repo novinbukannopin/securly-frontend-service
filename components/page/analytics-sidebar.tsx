@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { BarChart3, Link2 } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 
 import { Progress } from '@/components/ui/progress';
 import {
@@ -17,10 +17,6 @@ import { UsageData } from '@/types/limit';
 import { useGetProfile } from '@/service/queries/profile';
 
 export const usageData: UsageData = {
-  events: {
-    current: 880,
-    max: 1000,
-  },
   links: {
     current: 10,
     max: 25,
@@ -36,18 +32,6 @@ export function AnalyticsSidebar() {
         <SidebarGroupLabel>Usage</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu className={'gap-4'}>
-            <SidebarMenuItem>
-              <SidebarMenuButton className='w-full'>
-                <BarChart3 className='mr-2 h-4 w-4' />
-                <span>Events</span>
-                <span className='ml-auto'>
-                  {usageData.events.current} of {usageData.events.max}
-                </span>
-              </SidebarMenuButton>
-              <Progress
-                value={(usageData.events.current / usageData.events.max) * 100}
-              />
-            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton className='w-full'>
                 <Link2 className='mr-2 h-4 w-4' />

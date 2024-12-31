@@ -17,6 +17,7 @@ import {
 import { ToggleTheme } from '@/components/layout/toogle-theme';
 import AuthGuard from '@/middleware/AuthGuard';
 import React from 'react';
+import Notification from '@/components/custom/notification';
 
 export default function RootLayout({
   children,
@@ -42,14 +43,15 @@ export default function RootLayout({
                   </BreadcrumbList>
                 </Breadcrumb>
 
-                <div className='hidden gap-3 lg:flex'>
+                <div className='hidden lg:flex'>
+                  <Notification />
                   <ToggleTheme />
                 </div>
               </div>
             </div>
           </header>
           <div className='flex flex-1 flex-col gap-4 p-4 pt-4'>
-            <div className='min-h-[100vh] flex-1 rounded-xl md:min-h-min md:max-w-[70vw]'>
+            <div className='min-h-[100vh] flex-1 rounded-xl md:min-h-min md:max-w-[80vw]'>
               {children}
             </div>
           </div>

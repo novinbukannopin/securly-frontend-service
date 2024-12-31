@@ -25,6 +25,7 @@ export function useLinkMutation({ method, endpoint }: UseLinkMutationOptions) {
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['links'] });
       await queryClient.invalidateQueries({ queryKey: ['user'] });
+      await queryClient.invalidateQueries({ queryKey: ['click-analytics'] });
       toast.success(
         method === 'POST'
           ? 'Link created successfully'
