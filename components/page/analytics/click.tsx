@@ -33,6 +33,7 @@ import { useGetClicksAnalytics } from '@/service/queries/click-analytics';
 import TabsWrapperAnalytics from '@/components/page/analytics/tabs-wrapper';
 import { TableAnalytics } from '@/components/page/analytics/table';
 import { AnalyticsResponse } from '@/types/analytics';
+import { InfoDataNotAvailable } from '@/components/custom/data-not-available';
 
 export default function ClickChartAnalytics({
   topClick,
@@ -206,35 +207,39 @@ export default function ClickChartAnalytics({
               className='h-[350px] w-full'
             >
               <ResponsiveContainer width='100%' height='100%'>
-                <LineChart data={data?.click?.data || []}>
-                  <XAxis
-                    dataKey='date'
-                    stroke='#888888'
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    stroke='#888888'
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${value}`}
-                  />
-                  <ChartTooltip />
-                  <Line
-                    type='monotone'
-                    dataKey='totalClicks'
-                    strokeWidth={2}
-                    activeDot={{
-                      r: 6,
-                      style: { fill: 'var(--color-clicks)' },
-                    }}
-                    style={{
-                      stroke: 'var(--color-clicks)',
-                    }}
-                  />
-                </LineChart>
+                {data?.click?.data?.length === 0 ? (
+                  <InfoDataNotAvailable />
+                ) : (
+                  <LineChart data={data?.click?.data || []}>
+                    <XAxis
+                      dataKey='date'
+                      stroke='#888888'
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      stroke='#888888'
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `${value}`}
+                    />
+                    <ChartTooltip />
+                    <Line
+                      type='monotone'
+                      dataKey='totalClicks'
+                      strokeWidth={2}
+                      activeDot={{
+                        r: 6,
+                        style: { fill: 'var(--color-clicks)' },
+                      }}
+                      style={{
+                        stroke: 'var(--color-clicks)',
+                      }}
+                    />
+                  </LineChart>
+                )}
               </ResponsiveContainer>
             </ChartContainer>
           )}
