@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { client } from '@/lib/axios';
 import { PasswordInput } from '@/components/custom/password-input';
 import Icons from '../icons/icons';
+import { GOOGLE_AUTH } from '@/lib/env';
 
 const loginAccountSchema = z.object({
   email: z
@@ -175,7 +176,9 @@ export default function SignInPage() {
             variant='outline'
             className='w-full'
             onClick={() => {
-              window.location.href = 'http://localhost:3001/v1/auth/google';
+              window.location.href =
+                (GOOGLE_AUTH as string) ||
+                'https://securly-backend-cdf7dcf51dee.herokuapp.com/v1/auth/google';
             }}
           >
             <Icons.google className='mr-2 h-5 w-5' />

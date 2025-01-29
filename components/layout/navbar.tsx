@@ -35,16 +35,16 @@ interface FeatureProps {
 
 const routeList: RouteProps[] = [
   {
+    href: '#benefits',
+    label: 'Benefit',
+  },
+  {
     href: '#testimonials',
     label: 'Testimonials',
   },
   {
     href: '#team',
     label: 'Team',
-  },
-  {
-    href: '#contact',
-    label: 'Contact',
   },
   {
     href: '#faq',
@@ -124,6 +124,15 @@ export const Navbar = () => {
             </div>
 
             <SheetFooter className='flex-col items-start justify-start sm:flex-col'>
+              <div className={'mb-6 flex gap-6'}>
+                <Button asChild>
+                  <Link href='/login'>Login</Link>
+                </Button>
+
+                <Button asChild variant={'link'}>
+                  <Link href='/register'>Register</Link>
+                </Button>
+              </div>
               <Separator className='mb-2' />
 
               <ToggleTheme />
@@ -142,7 +151,7 @@ export const Navbar = () => {
             <NavigationMenuContent>
               <div className='grid w-[600px] grid-cols-2 gap-5 p-4'>
                 <Image
-                  src='/images/securly-demo.png'
+                  src='/hero-image-dark.png'
                   alt='Securly Features'
                   className='h-full w-full rounded-md object-cover'
                   width={600}
@@ -150,17 +159,19 @@ export const Navbar = () => {
                 />
                 <ul className='flex flex-col gap-2'>
                   {featureList.map(({ title, description }) => (
-                    <li
-                      key={title}
-                      className='rounded-md p-3 text-sm hover:bg-muted'
-                    >
-                      <p className='mb-1 font-semibold leading-none text-foreground'>
-                        {title}
-                      </p>
-                      <p className='line-clamp-2 text-muted-foreground'>
-                        {description}
-                      </p>
-                    </li>
+                    <Link href={'#features'} key={title}>
+                      <li
+                        key={title}
+                        className='rounded-md p-3 text-sm hover:bg-muted'
+                      >
+                        <p className='mb-1 font-semibold leading-none text-foreground'>
+                          {title}
+                        </p>
+                        <p className='line-clamp-2 text-muted-foreground'>
+                          {description}
+                        </p>
+                      </li>
+                    </Link>
                   ))}
                 </ul>
               </div>
