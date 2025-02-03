@@ -35,7 +35,7 @@ export const HeroSection = () => {
 
           <div className='space-y-4 md:space-x-4 md:space-y-0'>
             <Button className='group/arrow w-5/6 font-bold md:w-1/4'>
-              Coba Sekarang
+              <Link href='https://url.pasti.live/login'>Coba Sekarang</Link>
               <ArrowRight className='ml-2 size-5 transition-transform group-hover/arrow:translate-x-1' />
             </Button>
 
