@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { BarChart, Globe, Laptop, LinkIcon, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { GOOGLE_AUTH } from '@/lib/env';
 
 export const registerAccountSchema = z
   .object({
@@ -190,7 +191,9 @@ export default function SignUpCard() {
             variant='outline'
             className='h-11 w-full'
             onClick={() => {
-              window.location.href = 'http://localhost:3001/v1/auth/google';
+              window.location.href =
+                (GOOGLE_AUTH as string) ||
+                'https://securly-backend-cdf7dcf51dee.herokuapp.com/v1/auth/google';
             }}
           >
             <Icons.google className='mr-2 h-4 w-4' />
