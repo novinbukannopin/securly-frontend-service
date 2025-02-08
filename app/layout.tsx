@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation';
 import ReactQueryProvider from '@/providers/react-query-providers.';
 import { Toaster as SonnerToaster } from 'sonner';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,7 @@ export default function Main({
           <ReactQueryProvider>{children}</ReactQueryProvider>
           <SonnerToaster />
         </ThemeProvider>
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>
