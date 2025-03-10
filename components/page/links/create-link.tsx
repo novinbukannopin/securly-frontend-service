@@ -606,7 +606,13 @@ export default function LinkCreatorWithModal({
                       Reset / Close
                     </Button>
                     {!existingData ? (
-                      <Button type='submit' disabled={disableSubmit}>
+                      <Button
+                        type='submit'
+                        disabled={
+                          disableSubmit ||
+                          apiResponse?.data.prediction === 'blocked'
+                        }
+                      >
                         Create Link
                       </Button>
                     ) : (
