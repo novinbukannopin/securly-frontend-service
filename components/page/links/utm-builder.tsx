@@ -99,18 +99,18 @@ export function UTMBuilder({
             <h3 className='text-sm font-medium'>Link Preview</h3>
             <div className='mt-4'>
               <div className='rounded'>
-                <h5 className={'break-words text-sm'}>
+                <h5 className={'flex items-center gap-2 break-words text-sm'}>
                   <Button
                     variant='ghost'
                     size='icon'
-                    className='h-6 w-6 opacity-0 group-hover:opacity-100'
+                    className='h-6 w-6 opacity-100 group-hover:opacity-100'
                     onClick={() =>
                       copyShortLink(
                         `${
                           DOMAIN +
                           (watch('shortlink') || shortCode) +
                           buildUTMQueryString(utmData || data)
-                        }}`,
+                        }`,
                       )
                     }
                   >
