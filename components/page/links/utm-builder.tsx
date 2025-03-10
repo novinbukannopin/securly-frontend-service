@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { Globe, Info } from 'lucide-react';
+import { Copy, Globe, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -22,6 +22,7 @@ import {
 import { useFormContext } from 'react-hook-form';
 import { DOMAIN } from '@/lib/env';
 import { buildUTMQueryString } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type UTM = {
   source?: string;
@@ -52,6 +53,11 @@ export function UTMBuilder({
     Object.keys(utmData).forEach((field) => {
       setValue(`utm.${field}`, '');
     });
+  };
+
+  const copyShortLink = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Short link copied to clipboard');
   };
 
   return (
@@ -94,6 +100,22 @@ export function UTMBuilder({
             <div className='mt-4'>
               <div className='rounded'>
                 <h5 className={'break-words text-sm'}>
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    className='h-6 w-6 opacity-0 group-hover:opacity-100'
+                    onClick={() =>
+                      copyShortLink(
+                        `${
+                          DOMAIN +
+                          (watch('shortlink') || shortCode) +
+                          buildUTMQueryString(utmData || data)
+                        }}`,
+                      )
+                    }
+                  >
+                    <Copy className='h-3 w-3' />
+                  </Button>
                   <p>
                     {DOMAIN +
                       (watch('shortlink') || shortCode) +
