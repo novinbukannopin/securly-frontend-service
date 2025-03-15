@@ -7,6 +7,7 @@ export interface User {
   username: string;
   dob: Date;
   language: string;
+  role: string;
 }
 
 export type UserUpdatePayload = Partial<

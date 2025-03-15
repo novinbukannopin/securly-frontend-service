@@ -178,7 +178,8 @@ export default function SignInPage() {
             onClick={() => {
               window.location.href =
                 (GOOGLE_AUTH as string) ||
-                'https://securly-backend-cdf7dcf51dee.herokuapp.com/v1/auth/google';
+                // 'https://securly-backend-cdf7dcf51dee.herokuapp.com/v1/auth/google';
+                'http://localhost:3001/v1/auth/google';
             }}
           >
             <Icons.google className='mr-2 h-5 w-5' />
